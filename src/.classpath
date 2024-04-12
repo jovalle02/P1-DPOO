@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="logica"/>
-	<classpathentry kind="src" path="piezas"/>
-	<classpathentry kind="src" path="usuarios"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
