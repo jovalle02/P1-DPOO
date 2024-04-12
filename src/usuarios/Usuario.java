@@ -23,7 +23,8 @@ public abstract class Usuario {
         this.password = password;
         this.login = login;
     }
-
+    
+    
     // Getters y setters
     public String getId() {
         return id;
@@ -71,6 +72,16 @@ public abstract class Usuario {
 
 	public void setLogin(String login) {
 		this.login = login;
+	}
+
+
+	public Rol getRol() {
+		return rol;
+	}
+
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 
 	
