@@ -1,5 +1,7 @@
 package usuarios;
 
+import auth.Rol;
+
 public abstract class Usuario {
     // Atributos
     private String id;
@@ -8,6 +10,7 @@ public abstract class Usuario {
     private String email;
     private String login;
     private String password;
+    private Rol rol;
     
     // Otros atributos según tus necesidades
 
