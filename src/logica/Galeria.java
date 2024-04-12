@@ -3,9 +3,13 @@ package logica;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
+import exceptions.PiezaNoDisponibleException;
 import piezas.Escultura;
 import piezas.Fotografia;
 import piezas.Impresion;
@@ -13,6 +17,7 @@ import piezas.Pieza;
 import piezas.Pintura;
 import piezas.Video;
 import usuarios.Usuario;
+import usuarios.UsuarioComun;
 
 public class Galeria {
     // Atributos
@@ -22,6 +27,7 @@ public class Galeria {
     private Map<String, Usuario> propietarios;
     private Map<String, Usuario> compradores;
     private Map<String, Double> pagos;
+    private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
 
     // Constructor
     public Galeria() {
@@ -30,9 +36,14 @@ public class Galeria {
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
         pagos = new HashMap<>();
+        verificaciones = new ArrayList<Verificacion>();
     }
 
-    // Métodos para el inventario de piezas
+    public List<Verificacion> getVerificaciones() {
+		return verificaciones;
+	}
+
+	// Métodos para el inventario de piezas
     public void agregarPieza() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
@@ -202,15 +213,42 @@ public class Galeria {
     	inventario.remove(pieza.getId());
     }
 
-    public void confirmarVenta(Pieza pieza) {
-    	// IMPLEMENTAR
-    }
-
+    
     // Métodos para la compra y subasta de piezas
-    public void realizarCompra(Usuario comprador, Pieza pieza) {
-        // Lógica para realizar la compra
+    public void realizarCompra(UsuarioComun comprador, Pieza pieza) throws PiezaNoDisponibleException {
+    	if (pieza.isDisponible()) {
+        pieza.setDisponible(false); //Pone la pieza como no disponible
+        crearVerificacionCompra(comprador, pieza);
+    	}else {
+    		throw new PiezaNoDisponibleException(pieza.getId());
+    	}
+    }
+    
+    //Crea un nuevo caso de verificación para que un administrador pueda aprobar o rechazar la compra.
+    private void crearVerificacionCompra(UsuarioComun comprador, Pieza pieza) {
+    	Verificacion verificacion = new Verificacion(comprador, pieza);
+    	verificaciones.add(verificacion);
+    }
+    
+    //Revisa todos los
+    
+    
+    //Dado un caso pendiente de verificacion y la respuesta dada, se añadirá la pieza al comprador o, por el contrario, se pondrá de nuevo en venta.
+    public void confirmarVenta(Verificacion verificacion, boolean aprobar, String medioPago) {
+    	UsuarioComun comprador = verificacion.getUsuario();
+    	Pieza pieza = verificacion.getPieza();
+    	if(aprobar) {
+    		pieza.setVendida(true);
+    		comprador.getHistorial().add(pieza);
+    		comprador.getPiezasActuales().add(pieza);
+    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador);
+    		comprador.getCompras().add(factura);
+    	}else {
+    		pieza.setDisponible(true);
+    	}
     }
 
+    
     public void iniciarSubasta(Pieza pieza, double valorInicial, double valorMinimo) {
         // Lógica para iniciar una subasta
     }
