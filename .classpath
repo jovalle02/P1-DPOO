@@ -6,6 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="C:/Users/JUAN DAVID/Documents/UNIANDES/TERCER SEMESTRE/DPO/P1-DPOO/lib/org.json-1.6-20240205.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/org.json-1.6-20240205.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
