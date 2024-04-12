@@ -9,11 +9,11 @@ public abstract class Pieza {
     private String anioCreacion;
     private String lugarCreacion;
     private double valor;
-    public boolean exhibicion;
-    public boolean disponible;
-    public boolean vendida;
-    public boolean valorfijo;
-    public String estado;
+    private boolean exhibicion;
+    private boolean disponible;
+    private boolean vendida;
+    private boolean valorfijo;
+    private String estado;
     // Otros atributos según tus necesidades
 
     // Constructor
