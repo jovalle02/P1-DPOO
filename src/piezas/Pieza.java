@@ -14,10 +14,12 @@ public abstract class Pieza {
     private boolean vendida;
     private boolean valorfijo;
     private String estado;
+    private double alto;
+    private double ancho;
     // Otros atributos según tus necesidades
 
     // Constructor
-    public Pieza(String id, String tipo, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo) {
+    public Pieza(String id, String tipo, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo, String estado, double alto, double ancho) {
         this.id = id;
         this.tipo = tipo;
         this.titulo = titulo;
@@ -29,7 +31,9 @@ public abstract class Pieza {
         this.disponible = true;
         this.vendida = false;
         this.valorfijo = valorfijo;
-        
+        this.estado=estado;
+        this.alto= alto;
+        this.ancho= ancho;
     }
 
     // Getters y setters
@@ -115,6 +119,22 @@ public abstract class Pieza {
 
 	public void setValor(double valor) {
 		this.valor = valor;
+	}
+
+	public double getAlto() {
+		return alto;
+	}
+
+	public void setAlto(float alto) {
+		this.alto = alto;
+	}
+
+	public double getAncho() {
+		return ancho;
+	}
+
+	public void setAncho(float ancho) {
+		this.ancho = ancho;
 	}
     
 }

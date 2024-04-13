@@ -7,9 +7,9 @@ public class Fotografia extends Pieza {
     private double resolucion;
 
     // Constructor
-    public Fotografia(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,
+    public Fotografia(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado, double alto, double ancho,
                       String formato, String tecnica, double resolucion) {
-        super(id, "Fotografia", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo);
+        super(id, "Fotografia", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
         this.formato = formato;
         this.tecnica = tecnica;
         this.resolucion = resolucion;

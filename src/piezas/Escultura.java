@@ -11,12 +11,10 @@ public class Escultura extends Pieza {
     private String detallesInstalacion;
 
     // Constructor
-    public Escultura(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,
+    public Escultura(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado,
                      double alto, double ancho, double profundidad, String materiales, double peso,
                      boolean necesitaElectricidad, String detallesInstalacion) {
-        super(id, "Escultura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo);
-        this.alto = alto;
-        this.ancho = ancho;
+        super(id, "Escultura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
         this.profundidad = profundidad;
         this.materiales = materiales;
         this.peso = peso;

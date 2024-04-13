@@ -7,9 +7,9 @@ public class Impresion extends Pieza {
     private String calidad;
 
     // Constructor
-    public Impresion(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,
+    public Impresion(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado, double alto, double ancho,
                       String tipoImpresion, String tamano, String calidad) {
-        super(id, "Impresion", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo );
+        super(id, "Impresion", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado,alto,ancho );
         this.tipoImpresion = tipoImpresion;
         this.tamano = tamano;
         this.calidad = calidad;

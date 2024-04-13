@@ -45,17 +45,17 @@ public class CentralPersistencia {
 	        Pieza pieza = entry.getValue();
 	        JSONObject jPieza = new JSONObject();
 	        jPieza.put("titulo", pieza.getTitulo());
-	        jPieza.put("ano", pieza.getAno());
-	        jPieza.put("lugarDeCreacion", pieza.getLugarDeCreacion());
+	        jPieza.put("ano", pieza.getAnioCreacion());
+	        jPieza.put("lugarDeCreacion", pieza.getLugarCreacion());
 	        jPieza.put("estado", pieza.getEstado());
-	        jPieza.put("valorFijo", pieza.getValorFijo());
+	        jPieza.put("valorFijo", pieza.isValorfijo());
 	        jPieza.put("disponible", pieza.isDisponible());
 	        jPieza.put("vendida", pieza.isVendida());
-	        jPieza.put("precio", pieza.getPrecio());
-	        jPieza.put("exhibicion", pieza.getExhibicion());
-	        jPieza.put("descripcion", pieza.getDescripcion());
+	        jPieza.put("precio", pieza.getValor());
+	        jPieza.put("exhibicion", pieza.isExhibicion());
+	        jPieza.put("descripcion", pieza.getEstado());
 
-	        String tipoPieza = pieza.getTipoPieza();
+	        String tipoPieza = pieza.getTipo();
 	        if (tipoPieza.equals("Impresion")) {
 	            salvarImpresion((Impresion) pieza, jPieza);
 	        } else if (tipoPieza.equals("Fotografia")) {
@@ -99,14 +99,16 @@ public class CentralPersistencia {
 	    jPieza.put("profundidad", escultura.getProfundidad());
 	    jPieza.put("materiales", escultura.getMateriales());
 	    jPieza.put("peso", escultura.getPeso());
-	    jPieza.put("electricidad", escultura.isElectricidad());
+	    jPieza.put("electricidad", escultura.isNecesitaElectricidad());
 	}
 
 	private void salvarPintura(Pintura pintura, JSONObject jPieza) {
 	    jPieza.put("tipo", "Pintura");
 	    jPieza.put("alto", pintura.getAlto());
 	    jPieza.put("ancho", pintura.getAncho());
-	    jPieza.put("materiales", pintura.getMateriales());
+	    jPieza.put("tecnica", pintura.getTecnica());
+	    jPieza.put("lienzo", pintura.getLienzo());
+	    jPieza.put("estilo", pintura.getEstilo());
 	}
 
 }
