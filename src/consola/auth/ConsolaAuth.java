@@ -1,116 +1,126 @@
 package consola.auth;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.text.ParseException;
+import java.util.UUID;
 
+import org.json.JSONObject;
 
-
-
+import auth.Rol;
 import consola.ConsolaBasica;
+import usuarios.Administrador;
+import usuarios.Empleado;
+import usuarios.Usuario;
+import usuarios.UsuarioComun;
 
 public class ConsolaAuth extends ConsolaBasica {
 
-    private static final String USERS_FILE = "users.json";
+    private static final String USERS_FILE = "datos/usuarios.json";
+    private boolean autenticado = false;
+    private Usuario usuario;
 
     public ConsolaAuth() {
         // Constructor
     }
 
-    public void iniciar() {
-        boolean autenticado = false;
+    public Usuario iniciar() {
         while (!autenticado) {
             System.out.println("Bienvenido a la Consola de Autenticación");
-            System.out.println("Seleccione una opción:");
-            System.out.println("1. Iniciar sesión");
-            System.out.println("2. Crear cuenta");
             int opcion = mostrarMenu("Opciones", new String[]{"Iniciar sesión", "Crear cuenta"});
+            try {
+                JSONObject users = cargar(USERS_FILE);
+            } catch (Exception e) {
+                // Si el archivo no existe, lo crea
+                try (FileWriter file = new FileWriter(USERS_FILE)) {
+                    file.write("{}");
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
             switch (opcion) {
                 case 1:
-                    autenticarUsuario();
-                    autenticado = true;
+                    iniciarSesion();
                     break;
                 case 2:
-                    registrarUsuario();
-                    autenticado = true;
+                    crearCuenta();
                     break;
                 default:
                     System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
             }
         }
+        return usuario;
     }
 
-    private void autenticarUsuario() {
-        System.out.println("Iniciar sesión:");
-        String username = pedirCadenaAlUsuario("Nombre de usuario");
-        String password = pedirCadenaAlUsuario("Contraseña");
-        if (validarCredenciales(username, password)) {
-            System.out.println("¡Inicio de sesión exitoso!");
-        } else {
-            System.out.println("Nombre de usuario o contraseña incorrectos. Inténtelo de nuevo.");
-            autenticarUsuario();
-        }
+    private JSONObject cargar(String archivo) throws IOException {
+        String jsonCompleto = new String(Files.readAllBytes(new File(archivo).toPath()));
+        return new JSONObject(jsonCompleto);
     }
 
-    private void registrarUsuario() {
-        System.out.println("Crear cuenta:");
-        String username = pedirCadenaAlUsuario("Nombre de usuario");
-        String password = pedirCadenaAlUsuario("Contraseña");
-        if (usuarioExiste(username)) {
-            System.out.println("El nombre de usuario ya existe. Por favor, elija otro.");
-            registrarUsuario();
-        } else {
-            guardarUsuario(username, password);
-            System.out.println("Usuario creado exitosamente.");
-        }
-    }
+    private void iniciarSesion() {
+        String username = pedirCadenaAlUsuario("Ingrese su nombre de usuario:");
+        String password = pedirCadenaAlUsuario("Ingrese su contraseña:");
 
-    private boolean validarCredenciales(String username, String password) {
-        JSONObject usuarios = leerUsuariosDesdeArchivo();
-        if (usuarios.containsKey(username)) {
-            String storedPassword = (String) usuarios.get(username);
-            return storedPassword.equals(password);
-        }
-        return false;
-    }
-
-    private boolean usuarioExiste(String username) {
-        JSONObject usuarios = leerUsuariosDesdeArchivo();
-        return usuarios.containsKey(username);
-    }
-
-    @SuppressWarnings("unchecked")
-    private void guardarUsuario(String username, String password) {
-        JSONObject usuarios = leerUsuariosDesdeArchivo();
-        usuarios.put(username, password);
-        escribirUsuariosEnArchivo(usuarios);
-    }
-
-    private JSONObject leerUsuariosDesdeArchivo() {
-        JSONParser parser = new JSONParser();
-        JSONObject usuarios = new JSONObject();
         try {
-            FileReader reader = new FileReader(USERS_FILE);
-            usuarios = (JSONObject) parser.parse(reader);
-            reader.close();
-        } catch (FileNotFoundException e) {
-            // El archivo no existe, se creará uno nuevo
-        } catch (IOException | ParseException e) {
-            e.printStackTrace();
-        }
-        return usuarios;
-    }
-
-    private void escribirUsuariosEnArchivo(JSONObject usuarios) {
-        try {
-            FileWriter writer = new FileWriter(USERS_FILE);
-            usuarios.writeJSONString(writer);
-            writer.close();
+            JSONObject users = cargar(USERS_FILE);
+            if (users.has(username)) {
+                JSONObject user = users.getJSONObject(username);
+                if (user.getString("password").equals(password)) {
+                    if (user.getString("rol").equals(Rol.EMPLEADO.name())) {
+                        usuario = new Empleado(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username);
+                        autenticado = true;
+                    } else if (user.getString("rol").equals(Rol.COMUN.name())) {
+                        usuario = new UsuarioComun(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username, null, null, null);
+                        autenticado = true;
+                    } else if (user.getString("rol").equals(Rol.ADMIN.name())) {
+                        usuario = new Administrador(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username);
+                        autenticado = true;
+                    }
+                } else {
+                    System.out.println("Contraseña incorrecta.");
+                }
+            } else {
+                System.out.println("Usuario no encontrado.");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    private void crearCuenta() {
+        String username = pedirCadenaAlUsuario("Ingrese su nombre de usuario:");
+        String password = pedirCadenaAlUsuario("Ingrese su contraseña:");
+        String nombre = pedirCadenaAlUsuario("Ingrese su nombre:");
+        String apellido = pedirCadenaAlUsuario("Ingrese su apellido:");
+        String fechaNacimiento = pedirCadenaAlUsuario("Ingrese su fecha de nacimiento (dd/mm/yyyy):");
+
+        try {
+            JSONObject users = cargar(USERS_FILE);
+            if (users.has(username)) {
+                System.out.println("El usuario ya existe.");
+            } else {
+                JSONObject user = new JSONObject();
+                user.put("password", password);
+                user.put("nombre", nombre);
+                user.put("apellido", apellido);
+                user.put("fechaNacimiento", fechaNacimiento);
+                user.put("rol", Rol.COMUN.name());
+                user.put("id", UUID.randomUUID().toString());
+                users.put(username, user);
+                try (FileWriter file = new FileWriter(USERS_FILE)) {
+                    file.write(users.toString());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
