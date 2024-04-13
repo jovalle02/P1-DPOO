@@ -28,18 +28,21 @@ public class Galeria {
     private Map<String, Usuario> compradores;
     private Map<String, Double> pagos;
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
-
     // Constructor
     public Galeria() {
     	inventario = new HashMap<>();
-        usuarios = new HashMap<>();
+        usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
         pagos = new HashMap<>();
         verificaciones = new ArrayList<Verificacion>();
     }
 
-    public List<Verificacion> getVerificaciones() {
+    public Map<String, Usuario> getUsuarios() {
+		return usuarios;
+	}
+
+	public List<Verificacion> getVerificaciones() {
 		return verificaciones;
 	}
 

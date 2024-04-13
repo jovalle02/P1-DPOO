@@ -15,15 +15,15 @@ public abstract class Usuario {
     // Otros atributos según tus necesidades
 
     // Constructor
-    public Usuario(String id, String nombre, String apellido, String email, String password, String login) {
+    public Usuario(String id, String nombre, String apellido, String email, String password, String login, Rol rol) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
         this.email = email;
         this.password = password;
         this.login = login;
+        this.rol = rol;
     }
-    
     
     // Getters y setters
     public String getId() {
