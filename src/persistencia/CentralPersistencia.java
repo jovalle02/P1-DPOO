@@ -26,7 +26,7 @@ public class CentralPersistencia {
 	        jUsuario.put("nombre", usuario.getNombre());
 	        jUsuario.put("apellido", usuario.getApellido());
 	        jUsuario.put("email", usuario.getEmail());
-	        String tipoUsuario = usuario.getRol();
+	        String tipoUsuario = usuario.getRol().name();
 	        jUsuario.put("tipoUsuario", tipoUsuario);
 	        if(tipoUsuario.equals("comun")) {
 	        	salvarComun((UsuarioComun)usuario, jUsuario);
