@@ -10,12 +10,12 @@ public abstract class Usuario {
     private String email;
     private String login;
     private String password;
-    private Rol rol;
+    private String rol;
     
     // Otros atributos según tus necesidades
 
     // Constructor
-    public Usuario(String id, String nombre, String apellido, String email, String password, String login, Rol rol) {
+    public Usuario(String id, String nombre, String apellido, String email, String password, String login, String rol) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
@@ -75,12 +75,12 @@ public abstract class Usuario {
 	}
 
 
-	public Rol getRol() {
+	public String getRol() {
 		return rol;
 	}
 
 
-	public void setRol(Rol rol) {
+	public void setRol(String rol) {
 		this.rol = rol;
 	}
 

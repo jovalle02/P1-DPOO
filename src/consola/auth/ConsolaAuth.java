@@ -71,13 +71,13 @@ public class ConsolaAuth extends ConsolaBasica {
                 JSONObject user = users.getJSONObject(username);
                 if (user.getString("password").equals(password)) {
                     if (user.getString("rol").equals(Rol.EMPLEADO.name())) {
-                        usuario = new Empleado(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username);
+                        usuario = new Empleado(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username,user.getString("rol"));
                         autenticado = true;
                     } else if (user.getString("rol").equals(Rol.COMUN.name())) {
-                        usuario = new UsuarioComun(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username, null, null, null);
+                        usuario = new UsuarioComun(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username,user.getString("rol"), null, null, null, user.getBoolean("verificado"),user.getFloat("topeDeCompra"));
                         autenticado = true;
                     } else if (user.getString("rol").equals(Rol.ADMIN.name())) {
-                        usuario = new Administrador(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username);
+                        usuario = new Administrador(user.getString("id"), user.getString("nombre"), user.getString("apellido"), user.getString("email"), password, username,user.getString("rol"));
                         autenticado = true;
                     }
                 } else {

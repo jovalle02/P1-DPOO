@@ -13,7 +13,7 @@ public class UsuarioComun extends Usuario {
 	private List<Factura>compras = new ArrayList<Factura>();
 	private boolean verificado;
 	private float topeDeCompra;
-	public UsuarioComun(String id, String nombre, String apellido, String email, String password, String login, Rol rol, List<Pieza> historial, List<Pieza> piezasActuales, List<Factura> compras, boolean verificado, float topeDeCompra ) {
+	public UsuarioComun(String id, String nombre, String apellido, String email, String password, String login, String rol, List<Pieza> historial, List<Pieza> piezasActuales, List<Factura> compras, boolean verificado, float topeDeCompra ) {
 		super(id, nombre, apellido, email, password, login, rol);
 		this.historial = historial;
 		this.piezasActuales = piezasActuales;
