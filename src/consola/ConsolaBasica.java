@@ -162,33 +162,34 @@ public abstract class ConsolaBasica
      * @param opciones Las opciones que se le presentan al usuario
      * @return El número de la opción seleccionada por el usuario, contando desde 1
      */
-    protected int mostrarMenu( String nombreMenu, String[] opciones )
-    {
-        System.out.println( "\n---------------------" );
-        System.out.println( nombreMenu );
-        System.out.println( "---------------------" );
+    protected int mostrarMenu(String nombreMenu, String[] opciones) {
+        int opcionSeleccionada = 0;
+        boolean opcionValida = false;
 
-        for( int i = 1; i <= opciones.length; i++ )
-        {
-            System.out.println( " " + i + ". " + opciones[ i - 1 ] );
-        }
-        String opcion = pedirCadenaAlUsuario( "Escoja la opción deseada" );
-        try
-        {
-            int opcionSeleccionada = Integer.parseInt( opcion );
-            if( opcionSeleccionada > 0 && opcionSeleccionada <= opciones.length )
-                return opcionSeleccionada;
-            else
-            {
-                System.out.println( "Esa no es una opción válida. Digite solamente números entre 1 y " + opciones.length );
-                return mostrarMenu( nombreMenu, opciones );
+        while (!opcionValida) {
+            System.out.println("\n---------------------");
+            System.out.println(nombreMenu);
+            System.out.println("---------------------");
+
+            for (int i = 1; i <= opciones.length; i++) {
+                System.out.println(" " + i + ". " + opciones[i - 1]);
+            }
+
+            String opcion = pedirCadenaAlUsuario("Escoja la opción deseada");
+
+            try {
+                opcionSeleccionada = Integer.parseInt(opcion);
+                if (opcionSeleccionada > 0 && opcionSeleccionada <= opciones.length) {
+                    opcionValida = true;
+                } else {
+                    System.out.println("Esa no es una opción válida. Digite solamente números entre 1 y " + opciones.length);
+                }
+            } catch (NumberFormatException nfe) {
+                System.out.println("Esa no es una opción válida. Digite solamente números.");
             }
         }
-        catch( NumberFormatException nfe )
-        {
-            System.out.println( "Esa no es una opción válida. Digite solamente números." );
-            return mostrarMenu( nombreMenu, opciones );
-        }
+
+        return opcionSeleccionada;
     }
 
 }
