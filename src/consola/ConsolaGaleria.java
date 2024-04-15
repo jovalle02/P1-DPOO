@@ -3,6 +3,7 @@ package consola;
 import auth.Rol;
 import consola.auth.ConsolaAuth;
 import logica.Galeria;
+import piezas.Pieza;
 import usuarios.Usuario;
 
 public class ConsolaGaleria extends ConsolaBasica {
@@ -34,22 +35,30 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Salir"});
 
 		switch (opcion) {
 			case 1:
-				System.out.println("Consultar Pieza");
-				menuAdministrador();
+				System.out.println("Añadir una Pieza");
+				galeria.agregarPieza();
+				System.out.println("La pieza se ha añadido exitosamente!");
 				break;
 			case 2:
-				System.out.println("Realizar Oferta de Compra");
-				menuAdministrador();
+				System.out.println("Eliminar una Pieza");
+				String name = pedirCadenaAlUsuario("Ingrese el nombre de la pieza:");
+				Pieza pieza = galeria.getPieza(name);
+				galeria.eliminarPieza(pieza);
+				System.out.println("La pieza se ha eliminado exitosamente!");
 				break;
 			case 3:
-				System.out.println("Consultar Historial de Compras");
-				menuAdministrador();
+				System.out.println("Consultar inventario de la galeria");
+				galeria.consultarInventario();
 				break;
 			case 4:
+				System.out.println("Vender una pieza");
+				galeria.consultarInventario();
+				break;
+			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				correrAplicacion();
@@ -57,6 +66,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			default:
 				System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
 		}
+		menuAdministrador();
 	}
 
 	private void menuEmpleado() {
@@ -101,7 +111,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 	private void menuUsuario() {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.", "Salir"});
 
 		switch (opcion) {
 			case 1:

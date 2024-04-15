@@ -97,6 +97,7 @@ public class ConsolaAuth extends ConsolaBasica {
         String password = pedirCadenaAlUsuario("Ingrese su contraseña:");
         String nombre = pedirCadenaAlUsuario("Ingrese su nombre:");
         String apellido = pedirCadenaAlUsuario("Ingrese su apellido:");
+        String email = pedirCadenaAlUsuario("Ingrese su email:");
         String fechaNacimiento = pedirCadenaAlUsuario("Ingrese su fecha de nacimiento (dd/mm/yyyy):");
 
         try {
@@ -109,6 +110,7 @@ public class ConsolaAuth extends ConsolaBasica {
                 user.put("nombre", nombre);
                 user.put("apellido", apellido);
                 user.put("fechaNacimiento", fechaNacimiento);
+                user.put("email", email);
                 user.put("rol", Rol.COMUN.name());
                 user.put("id", UUID.randomUUID().toString());
                 users.put(username, user);

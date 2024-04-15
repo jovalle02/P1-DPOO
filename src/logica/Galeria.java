@@ -31,6 +31,7 @@ public class Galeria {
     // Constructor
     public Galeria() {
     	inventario = new HashMap<>();
+    	historial = new HashMap<>();
         usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
@@ -108,14 +109,6 @@ public class Galeria {
             }
         } catch (IOException | NumberFormatException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
     
@@ -217,8 +210,27 @@ public class Galeria {
         historial.put(video.getId(), video);
     }
     
+    public Pieza getPieza(String name) {
+		if (inventario.containsKey(name)) {
+		    Pieza pieza = inventario.get(name);
+		    return pieza;
+		} else {
+		    System.out.println("La pieza " + name + "no existe dentro del inventario.");
+		    return null;
+		}
+    }
+    
     public void eliminarPieza(Pieza pieza) {
     	inventario.remove(pieza.getId());
+    }
+    
+    public void consultarInventario() {
+        System.out.println("Piezas en el inventario:");
+        for (Map.Entry<String, Pieza> entry : inventario.entrySet()) {
+            String titulo = entry.getValue().getTitulo();
+            String tipo = entry.getValue().getTipo();
+            System.out.println("- " + titulo + " (" + tipo + ")");
+        }
     }
 
     
