@@ -30,7 +30,7 @@ public class Galeria {
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
     // Constructor
     public Galeria() {
-    	inventario = new HashMap<>();
+    	inventario = new HashMap<String, Pieza>();
         usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
