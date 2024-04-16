@@ -151,7 +151,7 @@ public class CentralPersistencia {
 	    JSONArray jVerificaciones = new JSONArray();
 	    for (Verificacion verificacion : listaVerificaciones) {
 	        JSONObject jVerificacion = new JSONObject();
-	        jVerificacion.put("usuario", verificacion.getUsuario().getLogin());
+	        jVerificacion.put("usuario", verificacion.getUsuario().getId());
 	        jVerificacion.put("pieza", verificacion.getPieza().getId());
 	        jVerificaciones.put(jVerificacion);
 	    }
@@ -181,9 +181,9 @@ public class CentralPersistencia {
 		for (int i =0; i<arrayVerificaciones.length();i++) {
 			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
 			String usuario = verificacion.getString("usuario");
-			//System.out.println(usuario);
+			System.out.println(usuario);
 			String pieza = verificacion.getString("pieza");
-			//System.out.println(pieza);
+			System.out.println(pieza);
 			try {
 			//System.out.println(galeria.getUsuarios().keySet());
 			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
