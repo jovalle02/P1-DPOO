@@ -24,7 +24,7 @@ public class Galeria {
     private Map<String, Usuario> usuarios;
     private Map<String, Usuario> propietarios;
     private Map<String, Usuario> compradores;
-    private Map<String, Double> pagos;
+    private Map<String, Factura> historialDeCompras;
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
     // Constructor
     public Galeria() {
@@ -33,7 +33,7 @@ public class Galeria {
         usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
-        pagos = new HashMap<>();
+        historialDeCompras = new HashMap<>();
         verificaciones = new ArrayList<Verificacion>();
     }
     
@@ -160,6 +160,9 @@ public class Galeria {
     		comprador.getPiezasActuales().add(pieza);
     		Factura factura = new Factura(medioPago,pieza.getValor(), comprador);
     		comprador.getCompras().add(factura);
+    		historialDeCompras.put(factura.getComprador().getId(), factura);
+    		propietarios.put(comprador.getId(), comprador);
+    		compradores.put(comprador.getId(), comprador);
     	}else {
     		pieza.setDisponible(true);
     	}
@@ -179,8 +182,8 @@ public class Galeria {
         compradores.put(comprador.getId(), comprador);
     }
 
-    public void realizarPago(Usuario comprador, double monto) {
-        // Lógica para registrar un pago
+    public void realizarPago(Factura factura) {
+    	historialDeCompras.put(factura.getComprador().getId(), factura);
     }
 
 	public Map<String, Pieza> getInventario() {

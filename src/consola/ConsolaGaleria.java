@@ -5,6 +5,7 @@ import java.util.Map;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
+import exceptions.PiezaNoDisponibleException;
 import logica.Galeria;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
@@ -22,7 +23,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	private Usuario usuario;
 	private CentralPersistencia persistencia;
 
-	public void correrAplicacion() {
+	public void correrAplicacion() throws PiezaNoDisponibleException {
 
         galeria = new Galeria( );
         persistencia = new CentralPersistencia();
@@ -47,7 +48,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 	}
 
-	private void menuAdministrador() {
+	private void menuAdministrador() throws PiezaNoDisponibleException {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Salir"});
 
 		switch (opcion) {
@@ -84,7 +85,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 		menuAdministrador();
 	}
 
-	private void menuEmpleado() {
+	private void menuEmpleado() throws PiezaNoDisponibleException {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras", "Salir"});
 
 		switch (opcion) {
@@ -111,7 +112,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 		}
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws PiezaNoDisponibleException {
 		ConsolaGaleria cg = new ConsolaGaleria();
 		cg.correrAplicacion();
 	}
@@ -126,7 +127,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 
-	private void menuUsuario() {
+	private void menuUsuario() throws PiezaNoDisponibleException {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.", "Salir"});
 
 		switch (opcion) {
@@ -143,9 +144,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 					if (usuario instanceof UsuarioComun) {
 						UsuarioComun u = (UsuarioComun) usuario;
 						if (u.getTopeDeCompra() >= pieza.getValor()) {
-							System.out.println("Si puede comprarlo");
+							System.out.println("Usted cumple con el monto minimo necesario para comprar la pieza.");
+							System.out.println("Por favor espere mientras un administrador confirma la compra, por ahora la pieza se encuentra bloqueada.");
+							galeria.realizarCompra(u, pieza);
 						} else {
-							System.out.println("No puede comprarlo");
+							System.out.println("Usted no cumple con el monto minimo necesario para comprar la pieza.");
+							System.out.println("Por favor consulte con un administrador para aumentar su tope maximo.");
 						}
 					}
 				}
