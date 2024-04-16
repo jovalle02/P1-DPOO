@@ -2,6 +2,7 @@ package consola;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
@@ -102,7 +103,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuEmpleado() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" ,"Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -118,6 +119,9 @@ public class ConsolaGaleria extends ConsolaBasica {
 				menuEmpleado();
 				break;
 			case 4:
+				System.out.println("Subastas");
+				menuSubastasEmpleado();
+			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();
@@ -194,21 +198,92 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 	}
 
+	private void menuSubastasEmpleado() throws Exception {
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Consultar subasta", "Finalizar subasta","Crear Subasta","Menu Principal"});
+		List<Subasta> subastas = this.galeria.getSubastas();
+		
+		
+		switch(opcion) {
+		
+		case 1:
+			for (int i = 0; i < subastas.size(); i++) {
+			    Subasta s = subastas.get(i);
+			    Pieza p = s.getPiezaSubastada();
+			    System.out.println("Numero de subasta: " + String.valueOf(i-1));
+			    this.imprimirDetallesPieza(p.getId());
+			    if (s.isActiva()) {
+			    	System.out.println("Estado subasta: Activa");
+			    } else {
+			    	System.out.println("Estado subasta: Terminada");
+			    }
+			    System.out.println("Valor minimo para ofertar: " + String.valueOf(s.getMayorOfrecido()) );
+			}
+			
+			if (subastas.size() == 0) {
+				System.out.println("No hay subastas disponibles");
+			}
+			menuSubastasEmpleado();
+			break;
+		case 2:
+			int idSubasta = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
+			Subasta s = subastas.get(idSubasta - 1);
+			Pieza p = s.getPiezaSubastada();
+		    System.out.println("Numero de subasta: " + String.valueOf(idSubasta-1));
+		    this.imprimirDetallesPieza(p.getId());
+		    if (s.isActiva()) {
+		    	System.out.println("Estado subasta: Activa");
+		    } else {
+		    	System.out.println("Estado subasta: Terminada");
+		    }
+		    System.out.println("Valor minimo para ofertar: " + String.valueOf(s.getMayorOfrecido()) );
+		    System.out.println("Valor minimo para poder finalizar la subasta:" + String.valueOf(s.getValorMinimo()) );
+		    System.out.println("Historial de Usuarios que han ofertado:");
+		    
+		    List<Usuario> ofertadores = s.getOfertadores();
+		    
+		    for (Usuario ofertador: ofertadores) {
+		    	System.out.println(ofertador.getNombre() + " " + ofertador.getApellido());
+		    }
+		    menuSubastasEmpleado();
+		    break;
+		case 3:
+			int id = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
+			Subasta subasta = subastas.get(id - 1);
+			
+			menuSubastasEmpleado();
+			break;
+		case 4:
+			float valorMinimo = (float) pedirNumeroAlUsuario("Cuanto debe ser el valor minimo de la subasta?");
+			float valorInicial = (float) pedirNumeroAlUsuario("Cuanto debe ser el valor inicial de la subasta?");
+			String idPieza = pedirCadenaAlUsuario("Ingrese el nombre de la pieza la cual desea subastar");
+			Pieza pieza = galeria.getPieza(idPieza);
+			
+			Subasta nuevaSubasta = new Subasta(valorMinimo, valorInicial, this.usuario, pieza, UUID.randomUUID().toString());
+			subastas.add(nuevaSubasta);
+			menuSubastasEmpleado();
+			break;
+		case 5:
+			menuEmpleado();
+			break;
+		default:
+			System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
+		}
+	}
 	
 	private void menuSubastasUsuario() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Realizar oferta", "Menu Principal"});
-		List<Subasta> subastas = galeria.getSubastas();
+		List<Subasta> subastas = this.galeria.getSubastas();
 		switch (opcion) {
 		case 1:
 			for (int i = 0; i < subastas.size(); i++) {
 			    Subasta s = subastas.get(i);
 			    Pieza p = s.getPiezaSubastada();
-			    System.out.println(String.valueOf(i+1) + ". " + p.getTitulo());
+			    System.out.println("Numero de subasta: " + String.valueOf(i+1));
+			    this.imprimirDetallesPieza(p.getId());
 			    if (s.isActiva()) {
-			    	System.out.println("Estado: Activa");
+			    	System.out.println("Estado subasta: Activa");
 			    } else {
-
-			    	System.out.println("Estado: Terminada");
+			    	System.out.println("Estado subasta: Terminada");
 			    }
 			    System.out.println("Valor minimo para ofertar: " + String.valueOf(s.getMayorOfrecido()) );
 			}
@@ -234,6 +309,8 @@ public class ConsolaGaleria extends ConsolaBasica {
 		case 3:
 			menuUsuario();
 			break;
+		default:
+			System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
 		}
 	}
 	

@@ -18,10 +18,10 @@ public class Subasta {
 	private boolean activa;
 	private String id;
 	
-	public Subasta(float valorMinimo, float valorMaximo, Usuario operador, Pieza piezaSubastada, String id) {
+	public Subasta(float valorMinimo, float valorInicial, Usuario operador, Pieza piezaSubastada, String id) {
 		super();
 		this.valorMinimo = valorMinimo;
-		this.valorInicial = valorMaximo;
+		this.valorInicial = valorInicial;
 		this.mayorOfrecido = valorMinimo;
 		this.operador = operador;
 		this.ofertadores = new ArrayList<Usuario>();
@@ -58,6 +58,7 @@ public class Subasta {
 		if (this.isActiva()) {
 			if (this.getMayorOfrecido() >= this.getValorMinimo()) {
 				this.setActiva(false);
+				
 			} else {
 				throw new Exception("La subasta aun no ha llegado a su valor minimo");
 			}			
