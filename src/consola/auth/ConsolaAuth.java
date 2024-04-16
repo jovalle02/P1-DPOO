@@ -10,6 +10,7 @@ import java.text.ParseException;
 import java.util.UUID;
 
 import org.json.JSONObject;
+import org.omg.CORBA.CurrentOperations;
 
 import auth.Rol;
 import consola.ConsolaBasica;
@@ -98,6 +99,7 @@ public class ConsolaAuth extends ConsolaBasica {
         String nombre = pedirCadenaAlUsuario("Ingrese su nombre:");
         String apellido = pedirCadenaAlUsuario("Ingrese su apellido:");
         String email = pedirCadenaAlUsuario("Ingrese su email:");
+        Double topaDeCompra = 2000000.0;
         String fechaNacimiento = pedirCadenaAlUsuario("Ingrese su fecha de nacimiento (dd/mm/yyyy):");
 
         try {
@@ -111,6 +113,8 @@ public class ConsolaAuth extends ConsolaBasica {
                 user.put("apellido", apellido);
                 user.put("fechaNacimiento", fechaNacimiento);
                 user.put("email", email);
+                user.put("topeDeCompra", topaDeCompra);
+                user.put("verificado", false);
                 user.put("rol", Rol.COMUN.name());
                 user.put("id", UUID.randomUUID().toString());
                 users.put(username, user);
@@ -124,6 +128,6 @@ public class ConsolaAuth extends ConsolaBasica {
             e.printStackTrace();
         }
     }
-
+    
 }
 
