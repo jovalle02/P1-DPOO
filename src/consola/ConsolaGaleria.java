@@ -5,8 +5,8 @@ import java.util.List;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
-import exceptions.PiezaNoDisponibleException;
 import logica.Galeria;
+import logica.Subasta;
 import logica.Verificacion;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
@@ -24,7 +24,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	private Usuario usuario;
 	private CentralPersistencia persistencia;
 
-	public void correrAplicacion() throws PiezaNoDisponibleException {
+	public void correrAplicacion() throws Exception {
 
         galeria = new Galeria( );
         persistencia = new CentralPersistencia();
@@ -49,7 +49,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 	}
 
-	private void menuAdministrador() throws PiezaNoDisponibleException {
+	private void menuAdministrador() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Verificar compras", "Salir"});
 
 		switch (opcion) {
@@ -101,7 +101,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 		menuAdministrador();
 	}
 
-	private void menuEmpleado() throws PiezaNoDisponibleException {
+	private void menuEmpleado() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras", "Salir"});
 
 		switch (opcion) {
@@ -128,7 +128,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 		}
 	}
 
-	public static void main(String[] args) throws PiezaNoDisponibleException {
+	public static void main(String[] args) throws Exception {
 		ConsolaGaleria cg = new ConsolaGaleria();
 		cg.correrAplicacion();
 	}
@@ -143,7 +143,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 
-	private void menuUsuario() throws PiezaNoDisponibleException {
+	private void menuUsuario() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Salir"});
 
 		switch (opcion) {
@@ -181,8 +181,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 				break;
 			case 4:
 				System.out.println("Subastas");
-				
-				
+				menuSubastasUsuario();
 				break;
 			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
@@ -196,7 +195,31 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	
-	
+	private void menuSubastasUsuario() throws Exception {
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Realizar oferta"});
+		List<Subasta> subastas = galeria.getSubastas();
+		switch (opcion) {
+		case 1:
+			for (int i = 0; i < subastas.size(); i++) {
+			    Subasta s = subastas.get(i);
+			    Pieza p = s.getPiezaSubastada();
+			    System.out.println(String.valueOf(i+1) + ". " + p.getTitulo());
+			    System.out.println("Valor minimo para ofertar: " + String.valueOf(s.getMayorOfrecido()) );
+			}
+			menuSubastasUsuario();
+			break;
+			
+		case 2: 
+			int idSubasta = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
+			Subasta s = subastas.get(idSubasta - 1);
+			float valorOferta = (float) pedirNumeroAlUsuario("Cuanto desea ofrecer?");
+			try {
+				s.subastar((UsuarioComun) this.usuario, valorOferta);				
+			} catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
 	
     private void agregarPieza() {
 
