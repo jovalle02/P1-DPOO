@@ -29,7 +29,7 @@ public class CentralPersistencia {
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
-	    JSONArray jUsuarios = new JSONArray();
+	    JSONObject jUsuarios = new JSONObject();
 	    for (Map.Entry<String, Usuario> entry : mapa.entrySet()) {
 	    	Usuario usuario = entry.getValue();
 	        JSONObject jUsuario = new JSONObject();
@@ -44,7 +44,7 @@ public class CentralPersistencia {
 	        if(tipoUsuario.equals("comun")) {
 	        	salvarComun((UsuarioComun)usuario, jUsuario);
 	        }
-	        jUsuarios.put(jUsuario);
+	        jUsuarios.put(usuario.getLogin(), jUsuario);
 	        
 	    }
 	    try (FileWriter file = new FileWriter(archivo)) {
