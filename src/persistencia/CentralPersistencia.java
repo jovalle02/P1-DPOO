@@ -165,9 +165,11 @@ public class CentralPersistencia {
 	    jPieza.put("estilo", pintura.getEstilo());
 	}
 	
-	public static void salvarVerificaciones(List<Verificacion> listaVerificaciones, String archivo) {
+	public static void salvarVerificaciones(Galeria galeria, String archivo) {
+		List<Verificacion> listaVerificaciones = galeria.getVerificaciones();
 	    JSONArray jVerificaciones = new JSONArray();
 	    for (Verificacion verificacion : listaVerificaciones) {
+	    	//System.out.println("Verificacion: "+verificacion.getUsuario().getId());
 	        JSONObject jVerificacion = new JSONObject();
 	        jVerificacion.put("usuario", verificacion.getUsuario().getId());
 	        jVerificacion.put("pieza", verificacion.getPieza().getId());
@@ -212,32 +214,29 @@ public class CentralPersistencia {
 		salvarPiezas(inventario, INVENTARIO__FILE);
 		salvarPiezas(historial, HISTORIAL__FILE);
 		//Salvar verificaciones
-		salvarVerificaciones(galeria.getVerificaciones(), VERIFICACIONES__FILE);
+		salvarVerificaciones(galeria, VERIFICACIONES__FILE);
 	}
 	
 	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {
+		List<Verificacion> newList = new ArrayList<Verificacion>();
 		for (int i =0; i<arrayVerificaciones.length();i++) {
 			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
 			String usuario = verificacion.getString("usuario");
-			//System.out.println(usuario);
+			System.out.println(usuario);
 			String pieza = verificacion.getString("pieza");
-			//System.out.println(pieza);
+			System.out.println(pieza);
 			try {
 			//System.out.println(galeria.getUsuarios().keySet());
 			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
 			Pieza piezaAdd = galeria.getInventario().get(pieza);
-			List<Verificacion> newList = galeria.getVerificaciones();
 			Verificacion verificacionAdd = new Verificacion(usuarioAdd, piezaAdd);
 			newList.add(verificacionAdd);
-			galeria.setVerificaciones(newList);
 			}catch (Exception e) {
 	            e.printStackTrace();
 	            System.out.println("Una verificación de compra solo puede contener un usuario común.");
 	        }
-			
-			
-			
 		}
+		galeria.setVerificaciones(newList);
 	}
 	public static void cargarPiezas(Galeria galeria, JSONArray arrayPiezas,Map<String, Pieza> mapa) {
 	for (int i = 0; i < arrayPiezas.length(); i++) {
