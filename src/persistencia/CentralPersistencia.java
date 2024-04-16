@@ -332,13 +332,13 @@ public class CentralPersistencia {
 	private static void cargarAdministrador(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                         String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Administrador object to the map
-	    mapaUsuarios.put(login, new Administrador(id, nombre, apellido, email, password, login,  rol));
+	    mapaUsuarios.put(id, new Administrador(id, nombre, apellido, email, password, login,  rol));
 	}
 
 	private static void cargarEmpleado(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                    String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Empleado object to the map
-	    mapaUsuarios.put(login, new Empleado(id, nombre, apellido, email, password, login,rol));
+	    mapaUsuarios.put(id, new Empleado(id, nombre, apellido, email, password, login,rol));
 	}
 
 	private static void cargarUsuarioComun(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
@@ -347,7 +347,7 @@ public class CentralPersistencia {
 	    boolean verificado = usuario.getBoolean("verificado");
 	    float topeDeCompra = usuario.getFloat("topeDeCompra");
 	    // Create and add the UsuarioComun object to the map
-	    mapaUsuarios.put(login, new UsuarioComun(id, nombre, apellido, email, password, login, rol, null, null, null, verificado, topeDeCompra));
+	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, null, null, null, verificado, topeDeCompra));
 	}
 
 
