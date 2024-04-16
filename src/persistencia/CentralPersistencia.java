@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +59,21 @@ public class CentralPersistencia {
 	}
 	public static void salvarComun(UsuarioComun usuario, JSONObject jUsuario) {
 		jUsuario.put("verificado", usuario.isVerificado());
-		jUsuario.put("topeDeCompra", usuario.getTopeDeCompra());}
+		jUsuario.put("topeDeCompra", usuario.getTopeDeCompra());
+	    
+		JSONArray jHistorial = new JSONArray();
+		for (Pieza pieza: usuario.getHistorial()) {
+	    	jHistorial.put(pieza.getId());
+	    }
+		jUsuario.put("historial", jHistorial);
+		
+	    JSONArray jPiezasActuales = new JSONArray();
+	    for (Pieza pieza: usuario.getPiezasActuales()) {
+	    	jPiezasActuales.put(pieza.getId());
+	    }
+		jUsuario.put("piezas_actuales", jPiezasActuales);
+	    
+	}
 	
 	public static void salvarPiezas(Map<String, Pieza> mapaPiezas, String archivo) {
 	    JSONArray jPiezas = new JSONArray();
@@ -181,9 +196,9 @@ public class CentralPersistencia {
 		for (int i =0; i<arrayVerificaciones.length();i++) {
 			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
 			String usuario = verificacion.getString("usuario");
-			System.out.println(usuario);
+			//System.out.println(usuario);
 			String pieza = verificacion.getString("pieza");
-			System.out.println(pieza);
+			//System.out.println(pieza);
 			try {
 			//System.out.println(galeria.getUsuarios().keySet());
 			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
@@ -314,13 +329,13 @@ public class CentralPersistencia {
 	        Rol rolClass = Rol.fromString(rol);
 	        switch (rol) {
 	            case "ADMIN":
-	                cargarAdministrador(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
+	                cargarAdministrador(galeria, mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
 	            case "EMPLEADO":
-	                cargarEmpleado(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
+	                cargarEmpleado(galeria, mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
 	            case "COMUN":
-	                cargarUsuarioComun(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
+	                cargarUsuarioComun(galeria, mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
 	            default:
 	                // Handle unknown role
@@ -329,40 +344,55 @@ public class CentralPersistencia {
 	    }
 	}
 
-	private static void cargarAdministrador(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
+	private static void cargarAdministrador(Galeria galeria, Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                         String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Administrador object to the map
 	    mapaUsuarios.put(id, new Administrador(id, nombre, apellido, email, password, login,  rol));
 	}
 
-	private static void cargarEmpleado(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
+	private static void cargarEmpleado(Galeria galeria, Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                    String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Empleado object to the map
 	    mapaUsuarios.put(id, new Empleado(id, nombre, apellido, email, password, login,rol));
 	}
 
-	private static void cargarUsuarioComun(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
+	private static void cargarUsuarioComun(Galeria galeria, Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                       String apellido, String email, String password, String login, Rol rol) {
 	    // Extract additional attributes specific to UsuarioComun
 	    boolean verificado = usuario.getBoolean("verificado");
 	    float topeDeCompra = usuario.getFloat("topeDeCompra");
+	    
+	    JSONArray jHistorial = usuario.getJSONArray("historial");
+	    List<Pieza> histLista = new ArrayList<Pieza>();
+	    for (int i = 0; i<jHistorial.length();i++) {
+	    	String idObra = jHistorial.getString(i);
+	    	Pieza obra = galeria.getPieza(idObra);
+	    	if(obra!=null) {
+	    		histLista.add(galeria.getPieza(idObra));
+	    		System.out.println(galeria.getPieza(idObra).getId());
+	    	}
+	    }
+	    
+	    JSONArray jPiezas = usuario.getJSONArray("piezas_actuales");
+	    List<Pieza> piezasLista = new ArrayList<Pieza>();
+	    for (int i = 0; i<jPiezas.length();i++) {
+	    	String idObra = jPiezas.getString(i);
+	    	Pieza obra = galeria.getPieza(idObra);
+	    	if(obra!=null) {
+	    		piezasLista.add(galeria.getPieza(idObra));
+	    		System.out.println(galeria.getPieza(idObra).getId());
+	    	}
+	    	
+	    	
+	    }
+	    
 	    // Create and add the UsuarioComun object to the map
-	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, null, null, null, verificado, topeDeCompra));
+	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, histLista, piezasLista, null, verificado, topeDeCompra));
 	}
 
 
 	public static void cargarGaleria(Galeria galeria) {
-		//Carga los usuarios 
-		Map<String,Usuario> usuarios = galeria.getUsuarios();
-		try { 
-			String jsonDataUsuarios = new String(Files.readAllBytes(Paths.get(USUARIOS__FILE)));
-	        JSONObject jPiezasUsuarios = new JSONObject(jsonDataUsuarios);
-	        cargarUsuarios(galeria, jPiezasUsuarios, usuarios);
-
-			} catch (IOException e) {
-	            e.printStackTrace();
-	            System.out.println("Error leyendo el archivo de usuarios.");
-	        }
+		
 		//Carga las piezas
 		Map<String, Pieza> inventario = galeria.getInventario();
 		Map<String, Pieza> historial = galeria.getHistorial();
@@ -380,6 +410,18 @@ public class CentralPersistencia {
             System.out.println("Error leyendo el archivo de piezas.");
         }
 		
+		//Carga los usuarios 
+				Map<String,Usuario> usuarios = galeria.getUsuarios();
+				try { 
+					String jsonDataUsuarios = new String(Files.readAllBytes(Paths.get(USUARIOS__FILE)));
+			        JSONObject jPiezasUsuarios = new JSONObject(jsonDataUsuarios);
+			        cargarUsuarios(galeria, jPiezasUsuarios, usuarios);
+
+					} catch (IOException e) {
+			            e.printStackTrace();
+			            System.out.println("Error leyendo el archivo de usuarios.");
+			        }
+				
 		//Carga las verificaciones 
 		try {
 		String jsonVerificaciones = new String(Files.readAllBytes(Paths.get(VERIFICACIONES__FILE)));
