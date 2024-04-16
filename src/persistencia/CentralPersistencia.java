@@ -47,7 +47,7 @@ public class CentralPersistencia {
 		jUsuario.put("verificado", usuario.isVerificado());
 		jUsuario.put("topeDeCompra", usuario.getTopeDeCompra());}
 	
-	public void salvarPiezas(Map<String, Pieza> mapaPiezas, String archivo) {
+	public static void salvarPiezas(Map<String, Pieza> mapaPiezas, String archivo) {
 	    JSONArray jPiezas = new JSONArray();
 	    for (Map.Entry<String, Pieza> entry : mapaPiezas.entrySet()) {
 	        Pieza pieza = entry.getValue();
@@ -87,7 +87,7 @@ public class CentralPersistencia {
         }
 	}
 
-	private void salvarImpresion(Impresion impresion, JSONObject jPieza) {
+	private static void salvarImpresion(Impresion impresion, JSONObject jPieza) {
 	    jPieza.put("tipo", "Impresion");
 	    jPieza.put("alto", impresion.getAlto());
 	    jPieza.put("ancho", impresion.getAncho());
@@ -97,13 +97,13 @@ public class CentralPersistencia {
 
 	}
 
-	private void salvarFotografia(Fotografia fotografia, JSONObject jPieza) {
+	private static void salvarFotografia(Fotografia fotografia, JSONObject jPieza) {
 	    jPieza.put("tipo", "Fotografia");
 	    jPieza.put("alto", fotografia.getAlto());
 	    jPieza.put("ancho", fotografia.getAncho());
 	}
 
-	private void salvarVideo(Video video, JSONObject jPieza) {
+	private static void salvarVideo(Video video, JSONObject jPieza) {
 	    jPieza.put("tipo", "Video");
 	    jPieza.put("alto", video.getAlto()); //FORMATO, DURACION, CALIDAD
 	    jPieza.put("ancho", video.getAncho());
@@ -114,7 +114,7 @@ public class CentralPersistencia {
 
 	}
 
-	private void salvarEscultura(Escultura escultura, JSONObject jPieza) {
+	private static void salvarEscultura(Escultura escultura, JSONObject jPieza) {
 	    jPieza.put("tipo", "Escultura");
 	    jPieza.put("alto", escultura.getAlto());
 	    jPieza.put("ancho", escultura.getAncho());
@@ -124,7 +124,7 @@ public class CentralPersistencia {
 	    jPieza.put("electricidad", escultura.isNecesitaElectricidad());
 	}
 
-	private void salvarPintura(Pintura pintura, JSONObject jPieza) {
+	private static void salvarPintura(Pintura pintura, JSONObject jPieza) {
 	    jPieza.put("tipo", "Pintura");
 	    jPieza.put("alto", pintura.getAlto());
 	    jPieza.put("ancho", pintura.getAncho());
@@ -134,7 +134,10 @@ public class CentralPersistencia {
 	}
 	
 	public static void salvarGaleria(Galeria galeria) {
-		
+		Map<String, Pieza> inventario = galeria.getInventario();
+		Map<String, Pieza> historial = galeria.getInventario();
+		salvarPiezas(inventario, INVENTARIO__FILE);
+		salvarPiezas(historial, HISTORIAL__FILE);
 	}
 	public static void cargarPiezas(Galeria galeria, JSONArray arrayPiezas,Map<String, Pieza> mapa) {
 	for (int i = 0; i < arrayPiezas.length(); i++) {
@@ -249,7 +252,7 @@ public class CentralPersistencia {
         
         String jsonDataHistorial = new String(Files.readAllBytes(Paths.get(HISTORIAL__FILE)));
         JSONArray jPiezasHistorial = new JSONArray(jsonDataHistorial);
-        cargarPiezas(galeria, jPiezasHistorial, inventario);
+        cargarPiezas(galeria, jPiezasHistorial, historial);
 		} catch (IOException e) {
             e.printStackTrace();
             System.out.println("Error leyendo el archivo de piezas.");
