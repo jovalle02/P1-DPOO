@@ -15,5 +15,7 @@
     "ancho": 1,
     "tecnica": "Oleo",
     "lienzo": "Normal",
-    "disponible": true
+    "disponible": true,
+    "id":"id_de_Vangó",
+    "valor":20000
   }]

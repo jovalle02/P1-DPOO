@@ -25,7 +25,7 @@ import usuarios.UsuarioComun;
 public class CentralPersistencia {
 	private static final String INVENTARIO__FILE = "datos/inventario.json";
 	private static final String HISTORIAL__FILE = "datos/historial.json";
-	private static final String USUARIOS__FILE = "datos/usuarios.json";
+	private static final String USUARIOS__FILE = "datos/listadoUsuarios.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
