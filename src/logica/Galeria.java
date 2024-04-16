@@ -30,7 +30,6 @@ public class Galeria {
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
     // Constructor
     public Galeria() {
-    	inventario = new HashMap<String, Pieza>();
     	inventario = new HashMap<>();
     	historial = new HashMap<>();
         usuarios = new HashMap<String, Usuario>();
@@ -48,111 +47,14 @@ public class Galeria {
 		return verificaciones;
 	}
 
-	// Métodos para el inventario de piezas
-	public void agregarPiezaJSON(Pieza pieza, HashMap<String, Pieza> mapa) {
-		mapa.put(pieza.getId(), pieza);
-	}
-    public void agregarPieza() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
-        try {
-            // Solicitar datos comunes a todas las piezas
-            System.out.println("Ingrese el título de la pieza:");
-            String titulo = br.readLine();
-
-            System.out.println("Ingrese el autor de la pieza:");
-            String autor = br.readLine();
-
-            System.out.println("Ingrese el año de creación de la pieza:");
-            String anioCreacion = br.readLine();
-
-            System.out.println("Ingrese el lugar de creación de la pieza:");
-            String lugarCreacion = br.readLine();
-            
-            System.out.println("Ingrese si la pieza se va a encontrar en exhibicion (True/False):");
-            boolean exhibicion = Boolean.parseBoolean(br.readLine());
-
-            System.out.println("Ingrese si la pieza tiene un valor fijo (True/False):");
-            boolean valorfijo = Boolean.parseBoolean(br.readLine());
-            
-            System.out.println("Ingrese el valor de la pieza:");
-            double valor = Double.parseDouble(br.readLine());
-            
-            System.out.println("Ingrese el estado de la pieza:");
-            String estado = br.readLine();
-            
-            System.out.println("Ingrese el alto de la piaza (m):");
-            double alto = Double.parseDouble(br.readLine());
-            
-            System.out.println("Ingrese el ancho de la piaza (m):");
-            double ancho = Double.parseDouble(br.readLine());
-            
-            
-            // Solicitar datos específicos según el tipo de pieza
-            System.out.println("Ingrese el tipo de pieza (Pintura, Escultura, Fotografia, Impresion, Video):");
-            String tipoPieza = br.readLine();
-
-            switch (tipoPieza.toLowerCase()) {
-                case "pintura":
-                    agregarPintura(br, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
-                    break;
-                case "escultura":
-                    agregarEscultura(br, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho);
-                    break;
-                case "fotografia":
-                    agregarFotografia(br, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
-                    break;
-                case "impresion":
-                    agregarImpresion(br, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
-                    break;
-                case "video":
-                    agregarVideo(br, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
-                    break;
-                default:
-                    System.out.println("Tipo de pieza no válido.");
-            }
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-        }
-    }
-    
     // Métodos para agregar cada tipo de pieza
-    private void agregarPintura(BufferedReader br, String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho) throws IOException {
-        // Solicitar datos específicos para pinturas
-        System.out.println("Ingrese la técnica de la pintura:");
-        String tecnica = br.readLine();
-
-        System.out.println("Ingrese el lienzo de la pintura:");
-        String lienzo = br.readLine();
-
-        System.out.println("Ingrese el estilo de la pintura:");
-        String estilo = br.readLine();
-
-        // Aquí puedes crear el objeto Pintura y agregarlo a la galería
+    public void agregarPintura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String tecnica, String lienzo, String estilo) throws IOException {
         Pintura pintura = new Pintura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, tecnica, lienzo, estilo);
-        // Agregar la pintura a la galería
         inventario.put(pintura.getId(), pintura);
         historial.put(pintura.getId(), pintura);
     }
 
-    private void agregarEscultura(BufferedReader br, String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho) throws IOException {
-        // Solicitar datos específicos para esculturas
-
-        System.out.println("Ingrese la profundidad de la escultura (m):");
-        double profundidad = Double.parseDouble(br.readLine());
-
-        System.out.println("Ingrese el material de la escultura:");
-        String materiales = br.readLine();
-
-        System.out.println("Ingrese el peso de la escultura:");
-        double peso = Double.parseDouble(br.readLine());
-
-        System.out.println("¿Necesita electricidad? (true/false):");
-        boolean necesitaElectricidad = Boolean.parseBoolean(br.readLine());
-
-        System.out.println("Ingrese los detalles de instalación de la escultura:");
-        String detallesInstalacion = br.readLine();
-
+    public void agregarEscultura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, double profundidad, String materiales, Double peso, boolean necesitaElectricidad, String detallesInstalacion) throws IOException {
         // Aquí puedes crear el objeto Escultura y agregarlo a la galería
         Escultura escultura = new Escultura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, profundidad, materiales, peso, necesitaElectricidad, detallesInstalacion);
         // Agregar la escultura a la galería
@@ -160,35 +62,13 @@ public class Galeria {
         historial.put(escultura.getId(), escultura);
     }
 
-    private void agregarFotografia(BufferedReader br, String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho) throws IOException {
-        // Solicitar datos específicos para fotografías
-        System.out.println("Ingrese el formato de la fotografía:");
-        String formato = br.readLine();
-
-        System.out.println("Ingrese la técnica de la fotografía:");
-        String tecnica = br.readLine();
-
-        System.out.println("Ingrese la resolución de la fotografía:");
-        double resolucion = Double.parseDouble(br.readLine());
-
-        // Aquí puedes crear el objeto Fotografia y agregarlo a la galería
+    public void agregarFotografia(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String formato, String tecnica, double resolucion) throws IOException {
         Fotografia fotografia = new Fotografia(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,formato, tecnica, resolucion);
-        // Agregar la fotografía a la galería
         inventario.put(fotografia.getId(), fotografia);
         historial.put(fotografia.getId(), fotografia);
     }
 
-    private void agregarImpresion(BufferedReader br, String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho) throws IOException {
-        // Solicitar datos específicos para impresiones
-        System.out.println("Ingrese el tipo de impresión:");
-        String tipoImpresion = br.readLine();
-
-        System.out.println("Ingrese el tamaño de la impresión:");
-        String tamano = br.readLine();
-
-        System.out.println("Ingrese la calidad de la impresión:");
-        String calidad = br.readLine();
-
+    public void agregarImpresion(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String tipoImpresion, String tamano, String calidad) throws IOException {
         // Aquí puedes crear el objeto Impresion y agregarlo a la galería
         Impresion impresion = new Impresion(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,tipoImpresion, tamano, calidad);
      // Agregar la impresion a la galería
@@ -196,17 +76,7 @@ public class Galeria {
         historial.put(impresion.getId(), impresion);
     }
 
-    private void agregarVideo(BufferedReader br, String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho) throws IOException {
-        // Solicitar datos específicos para videos
-        System.out.println("Ingrese el formato del video:");
-        String formato = br.readLine();
-
-        System.out.println("Ingrese la duración del video:");
-        String duracion = br.readLine();
-
-        System.out.println("Ingrese la calidad del video:");
-        String calidad = br.readLine();
-
+    public void agregarVideo(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String formato, String duracion, String calidad) throws IOException {
         // Aquí puedes crear el objeto Video y agregarlo a la galería
         Video video = new Video(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, formato, duracion, calidad);
         // Agregar el video a la galería
@@ -228,6 +98,17 @@ public class Galeria {
     	inventario.remove(pieza.getId());
     }
     
+    public void consultarInventarioParaCompra() {
+        System.out.println("Piezas en el inventario:");
+        for (Map.Entry<String, Pieza> entry : inventario.entrySet()) {
+        	if (entry.getValue().getIsFijo() == true) {
+                String titulo = entry.getValue().getTitulo();
+                String tipo = entry.getValue().getTipo();
+                System.out.println("- " + titulo + " (" + tipo + ")");
+        	}
+        }
+    }
+    
     public void consultarInventario() {
         System.out.println("Piezas en el inventario:");
         for (Map.Entry<String, Pieza> entry : inventario.entrySet()) {
@@ -236,6 +117,7 @@ public class Galeria {
             System.out.println("- " + titulo + " (" + tipo + ")");
         }
     }
+
 
     
     // Métodos para la compra y subasta de piezas
@@ -289,5 +171,9 @@ public class Galeria {
     public void realizarPago(Usuario comprador, double monto) {
         // Lógica para registrar un pago
     }
+
+	public Map<String, Pieza> getInventario() {
+		return inventario;
+	}
 }
 

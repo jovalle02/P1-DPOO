@@ -132,6 +132,10 @@ public abstract class Pieza {
 	public double getAncho() {
 		return ancho;
 	}
+	
+	public boolean getIsFijo() {
+		return valorfijo;
+	}
 
 	public void setAncho(float ancho) {
 		this.ancho = ancho;
