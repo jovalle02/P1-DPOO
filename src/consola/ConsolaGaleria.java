@@ -144,7 +144,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 	private void menuUsuario() throws PiezaNoDisponibleException {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -180,6 +180,11 @@ public class ConsolaGaleria extends ConsolaBasica {
 				menuUsuario();
 				break;
 			case 4:
+				System.out.println("Subastas");
+				
+				
+				break;
+			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				correrAplicacion();
@@ -190,6 +195,8 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 	}
 
+	
+	
 	
     private void agregarPieza() {
 

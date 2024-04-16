@@ -27,6 +27,7 @@ public class Galeria {
     private Map<String, Usuario> compradores;
     private Map<String, Factura> historialDeCompras;
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
+    private List<Subasta> subastas;
     // Constructor
     public Galeria() {
     	inventario = new HashMap<String, Pieza>();
@@ -36,6 +37,7 @@ public class Galeria {
         compradores = new HashMap<>();
         historialDeCompras = new HashMap<String, Factura>();
         verificaciones = new ArrayList<Verificacion>();
+        subastas = new ArrayList<Subasta>();
     }
     
     public Map<String, Pieza> getHistorial() {
@@ -171,7 +173,7 @@ public class Galeria {
     		comprador.getHistorial().add(pieza);
     		comprador.getPiezasActuales().add(pieza);
     		String facturaId = UUID.randomUUID().toString();
-    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId);
+    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId, pieza.getId());
     		comprador.getCompras().add(factura);
     		historialDeCompras.put(factura.getComprador().getId(), factura);
     		propietarios.put(comprador.getId(), comprador);
@@ -207,6 +209,10 @@ public class Galeria {
 
 	public Map<String, Factura> getHistorialDeCompras() {
 		return historialDeCompras;
+	}
+
+	public List<Subasta> getSubastas() {
+		return subastas;
 	}
 }
 
