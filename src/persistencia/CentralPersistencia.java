@@ -81,6 +81,10 @@ public class CentralPersistencia {
 	    jPieza.put("tipo", "Impresion");
 	    jPieza.put("alto", impresion.getAlto());
 	    jPieza.put("ancho", impresion.getAncho());
+	    jPieza.put("tipoImpresion", impresion.getTipoImpresion());
+	    jPieza.put("tamano", impresion.getTamano());
+	    jPieza.put("calidad", impresion.getCalidad());
+
 	}
 
 	private void salvarFotografia(Fotografia fotografia, JSONObject jPieza) {
@@ -97,9 +101,13 @@ public class CentralPersistencia {
 
 	private void salvarVideo(Video video, JSONObject jPieza) {
 	    jPieza.put("tipo", "Video");
-	    jPieza.put("alto", video.getAlto());
+	    jPieza.put("alto", video.getAlto()); //FORMATO, DURACION, CALIDAD
 	    jPieza.put("ancho", video.getAncho());
 	    jPieza.put("duracion", video.getDuracion());
+	    jPieza.put("formato", video.getFormato());
+	    jPieza.put("calidad", video.getCalidad());
+
+
 	}
 
 	private void salvarEscultura(Escultura escultura, JSONObject jPieza) {
@@ -163,11 +171,11 @@ public class CentralPersistencia {
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Escultura
-			double profundidad = pieza.getDouble("profundidad");
+			double profundidad = pieza.getDouble("profundidad"); 
 			String materiales = pieza.getString("materiales");
 			double peso = pieza.getDouble("peso");
 			boolean electricidad = pieza.getBoolean("electricidad");
-			String detallesInstalacion = pieza.getString("detallesInstalacion"); // Added
+			String detallesInstalacion = pieza.getString("detallesInstalacion"); 
 			// Add the Escultura object to the Galeria
 			galeria.agregarPiezaJSON(new Escultura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
 			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion),mapa);
@@ -203,7 +211,7 @@ public class CentralPersistencia {
             double alto, double ancho) {
 			// Extract additional attributes specific to Pintura
 			String tecnica = pieza.getString("tecnica");
-			String lienzo = pieza.getString("lienzo");
+			String lienzo = pieza.getString("lienzo"); 
 			String estilo = pieza.getString("estilo");
 			// Add the Pintura object to the Galeria
 			galeria.agregarPiezaJSON(new Pintura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
@@ -216,7 +224,7 @@ public class CentralPersistencia {
             double alto, double ancho) {
 			// Extract additional attributes specific to Video
 			String formato = pieza.getString("formato");
-			String duracion = pieza.getString("duracion");
+			String duracion = pieza.getString("duracion"); 
 			String calidad = pieza.getString("calidad");
 			// Add the Video object to the Galeria
 			galeria.agregarPiezaJSON(new Video(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
