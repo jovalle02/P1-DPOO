@@ -48,5 +48,8 @@ public class UsuarioComun extends Usuario {
 	public void setTopeDeCompra(float topeDeCompra) {
 		this.topeDeCompra = topeDeCompra;
 	}
+    public void agregarCompra(Factura factura) {
+        this.compras.add(factura);
+    }
 
 }
