@@ -38,7 +38,10 @@ public class Galeria {
         pagos = new HashMap<>();
         verificaciones = new ArrayList<Verificacion>();
     }
-
+    
+    public void agregarPiezaJSON(Pieza pieza, Map<String, Pieza> mapa) {
+    	mapa.put(pieza.getId(), pieza);
+    }
     public Map<String, Usuario> getUsuarios() {
 		return usuarios;
 	}
