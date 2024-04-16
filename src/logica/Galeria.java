@@ -49,6 +49,9 @@ public class Galeria {
 	}
 
 	// Métodos para el inventario de piezas
+	public void agregarPiezaJSON(Pieza pieza, HashMap<String, Pieza> mapa) {
+		mapa.put(pieza.getId(), pieza);
+	}
     public void agregarPieza() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 

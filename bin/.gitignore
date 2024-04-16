@@ -1,8 +1,4 @@
 /auth/
-/bin/
 /consola/
-/exceptions/
-/logica/
 /persistencia/
-/piezas/
-/usuarios/
+/logica/
