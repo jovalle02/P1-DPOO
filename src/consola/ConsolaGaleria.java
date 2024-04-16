@@ -81,8 +81,11 @@ public class ConsolaGaleria extends ConsolaBasica {
 					if (ofertar) {
 						String metodo = pedirCadenaAlUsuario("Cual es el metodo de pago?");
 						galeria.confirmarVenta(verificacion, ofertar, metodo);
+						System.out.println("Verificacion confirmada exitosamente.");
 					} else {
-						System.out.println("Confirmacion cancelada");
+						String metodo = pedirCadenaAlUsuario("Cual es el metodo de pago?");
+						galeria.confirmarVenta(verificacion, ofertar, metodo);
+						System.out.println("Verificacion rechazada exitosamente.");
 					}
 				}
 				break;

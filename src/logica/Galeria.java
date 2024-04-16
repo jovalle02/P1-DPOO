@@ -124,7 +124,7 @@ public class Galeria {
     public void consultarInventarioParaCompra() {
         System.out.println("Piezas en el inventario:");
         for (Map.Entry<String, Pieza> entry : inventario.entrySet()) {
-        	if (entry.getValue().getIsFijo() == true) {
+        	if (entry.getValue().getIsFijo() == true && entry.getValue().isDisponible()) {
                 String titulo = entry.getValue().getTitulo();
                 String tipo = entry.getValue().getTipo();
                 System.out.println("- " + titulo + " (" + tipo + ")");
@@ -176,8 +176,10 @@ public class Galeria {
     		historialDeCompras.put(factura.getComprador().getId(), factura);
     		propietarios.put(comprador.getId(), comprador);
     		compradores.put(comprador.getId(), comprador);
+    		verificaciones.remove(verificacion);
     	}else {
     		pieza.setDisponible(true);
+    		verificaciones.remove(verificacion);
     	}
     }
 
