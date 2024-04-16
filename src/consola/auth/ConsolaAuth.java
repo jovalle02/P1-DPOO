@@ -10,7 +10,6 @@ import java.text.ParseException;
 import java.util.UUID;
 
 import org.json.JSONObject;
-import org.omg.CORBA.CurrentOperations;
 
 import auth.Rol;
 import consola.ConsolaBasica;
