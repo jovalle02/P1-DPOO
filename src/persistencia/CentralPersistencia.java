@@ -150,7 +150,8 @@ public class CentralPersistencia {
 		salvarUsuarios(usuarios, USUARIOS__FILE);
 		//Salvar piezas
 		Map<String, Pieza> inventario = galeria.getInventario();
-		Map<String, Pieza> historial = galeria.getInventario();
+		System.out.println(inventario.keySet());
+		Map<String, Pieza> historial = galeria.getHistorial();
 		salvarPiezas(inventario, INVENTARIO__FILE);
 		salvarPiezas(historial, HISTORIAL__FILE);
 	}

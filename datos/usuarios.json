@@ -21,11 +21,11 @@
     "email": "jose",
     "rol": "COMUN"
   },
-  "Admin": {
+  "admin": {
     "password": "admin",
     "apellido": "Admin",
     "id": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
-    "login": "Admin",
+    "login": "admin",
     "nombre": "Admin",
     "email": "admin@admin.com",
     "rol": "ADMIN"
