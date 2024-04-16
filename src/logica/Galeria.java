@@ -33,7 +33,7 @@ public class Galeria {
         usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
-        historialDeCompras = new HashMap<>();
+        historialDeCompras = new HashMap<String, Factura>();
         verificaciones = new ArrayList<Verificacion>();
     }
     

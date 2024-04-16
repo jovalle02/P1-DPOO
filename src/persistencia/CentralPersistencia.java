@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import auth.Rol;
+import logica.Factura;
 import logica.Galeria;
 import logica.Verificacion;
 import piezas.Escultura;
@@ -177,6 +178,24 @@ public class CentralPersistencia {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public static void salvarFacturas(List<Factura> listaFacturas, String archivo) {
+	    JSONArray jFacturas = new JSONArray();
+	    for (Factura factura : listaFacturas) {
+	        JSONObject jFactura = new JSONObject();
+	        jFactura.put("tipoDePago", factura.getTipoDePago());
+	        jFactura.put("valor", factura.getValor());
+	        jFactura.put("usuario", factura.getComprador().getId());
+	        jFacturas.put(jFactura);
+	    }
+
+	    try (FileWriter file = new FileWriter(archivo)) {
+	        file.write(jFacturas.toString(2));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 
 	public static void salvarGaleria(Galeria galeria) {
 		//Salvar usuarios
@@ -390,7 +409,13 @@ public class CentralPersistencia {
 	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, histLista, piezasLista, null, verificado, topeDeCompra));
 	}
 
-
+	public static void cargarFacturas(Galeria galeria, JSONObject factura) {
+		double valor = factura.getDouble("valor");
+		String tipoDePago = factura.getString("tipoDePago");
+		String idUsuario = factura.getString("usuario");
+		Usuario usuario = galeria.getUsuarios().get(idUsuario);
+		//galeria.
+	}
 	public static void cargarGaleria(Galeria galeria) {
 		
 		//Carga las piezas
