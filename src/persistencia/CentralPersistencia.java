@@ -39,9 +39,9 @@ public class CentralPersistencia {
 	        jUsuario.put("nombre", usuario.getNombre());
 	        jUsuario.put("apellido", usuario.getApellido());
 	        jUsuario.put("email", usuario.getEmail());
-	        String tipoUsuario = usuario.getRol().name();
-	        jUsuario.put("tipoUsuario", tipoUsuario);
-	        if(tipoUsuario.equals("comun")) {
+	        String rol = usuario.getRol().name();
+	        jUsuario.put("rol", rol);
+	        if(rol.equals("COMUN")) {
 	        	salvarComun((UsuarioComun)usuario, jUsuario);
 	        }
 	        jUsuarios.put(usuario.getLogin(), jUsuario);
@@ -266,13 +266,13 @@ public class CentralPersistencia {
 	        String rol = usuario.getString("rol");
 	        Rol rolClass = Rol.fromString(rol);
 	        switch (rol) {
-	            case "Administrador":
+	            case "ADMIN":
 	                cargarAdministrador(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
-	            case "Empleado":
+	            case "EMPLEADO":
 	                cargarEmpleado(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
-	            case "UsuarioComun":
+	            case "COMUN":
 	                cargarUsuarioComun(mapaUsuarios, usuario, id, nombre, apellido, email, password, login, rolClass);
 	                break;
 	            default:
