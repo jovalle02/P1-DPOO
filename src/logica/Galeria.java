@@ -171,7 +171,7 @@ public class Galeria {
     		comprador.getHistorial().add(pieza);
     		comprador.getPiezasActuales().add(pieza);
     		String facturaId = UUID.randomUUID().toString();
-    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId);
+    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId, pieza.getId());
     		comprador.getCompras().add(factura);
     		historialDeCompras.put(factura.getComprador().getId(), factura);
     		propietarios.put(comprador.getId(), comprador);
