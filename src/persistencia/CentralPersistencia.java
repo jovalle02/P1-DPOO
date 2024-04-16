@@ -23,10 +23,12 @@ import usuarios.UsuarioComun;
 public class CentralPersistencia {
 	private static final String INVENTARIO__FILE = "datos/inventario.json";
 	private static final String HISTORIAL__FILE = "datos/historial.json";
+	private static final String USUARIOS__FILE = "datos/usuarios.json";
 
-	public void salvarUsuarios(Galeria galeria, JSONObject jobject) {
+
+	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
 	    JSONArray jUsuarios = new JSONArray();
-	    for (Map.Entry<String, Usuario> entry : galeria.getUsuarios().entrySet()) {
+	    for (Map.Entry<String, Usuario> entry : mapa.entrySet()) {
 	    	Usuario usuario = entry.getValue();
 	        JSONObject jUsuario = new JSONObject();
 	        jUsuario.put("login", usuario.getLogin());
@@ -40,10 +42,15 @@ public class CentralPersistencia {
 	        	salvarComun((UsuarioComun)usuario, jUsuario);
 	        }
 	        jUsuarios.put(jUsuario);
+	        
 	    }
-	    jobject.put("usuarios", jUsuarios);
+	    try (FileWriter file = new FileWriter(archivo)) {
+            file.write(jUsuarios.toString(2));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 	}
-	public void salvarComun(UsuarioComun usuario, JSONObject jUsuario) {
+	public static void salvarComun(UsuarioComun usuario, JSONObject jUsuario) {
 		jUsuario.put("verificado", usuario.isVerificado());
 		jUsuario.put("topeDeCompra", usuario.getTopeDeCompra());}
 	
@@ -134,6 +141,10 @@ public class CentralPersistencia {
 	}
 	
 	public static void salvarGaleria(Galeria galeria) {
+		//Salvar usuarios
+		Map<String, Usuario> usuarios = galeria.getUsuarios();
+		salvarUsuarios(usuarios, USUARIOS__FILE);
+		//Salvar piezas
 		Map<String, Pieza> inventario = galeria.getInventario();
 		Map<String, Pieza> historial = galeria.getInventario();
 		salvarPiezas(inventario, INVENTARIO__FILE);
