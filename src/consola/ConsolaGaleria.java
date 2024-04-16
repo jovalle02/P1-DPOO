@@ -27,7 +27,7 @@ public class ConsolaGaleria extends ConsolaBasica {
         galeria = new Galeria( );
         persistencia = new CentralPersistencia();
 
-        persistencia.cargarPiezasDesdeJSON(galeria);
+        galeria.cargarGaleria();
         if (isAutenticado()) {
 			if (usuario.getRol().equals(Rol.ADMIN)) {
 				menuAdministrador();
@@ -75,7 +75,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				Map<String, Pieza> inventario = galeria.getInventario();
-				persistencia.salvarPiezas(inventario);
+				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
 			default:
