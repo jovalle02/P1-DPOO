@@ -16,8 +16,9 @@ public class Subasta {
 	private Usuario clienteMaximoOfrecido;
 	private Pieza piezaSubastada;
 	private boolean activa;
+	private String id;
 	
-	public Subasta(float valorMinimo, float valorMaximo, Usuario operador, Pieza piezaSubastada) {
+	public Subasta(float valorMinimo, float valorMaximo, Usuario operador, Pieza piezaSubastada, String id) {
 		super();
 		this.valorMinimo = valorMinimo;
 		this.valorInicial = valorMaximo;
@@ -25,6 +26,7 @@ public class Subasta {
 		this.operador = operador;
 		this.ofertadores = new ArrayList<Usuario>();
 		this.piezaSubastada = piezaSubastada;
+		this.id = id;
 	}
 	
 	public void subastar(UsuarioComun user, float valor) throws Exception {
@@ -113,6 +115,14 @@ public class Subasta {
 
 	private void setActiva(boolean activa) {
 		this.activa = activa;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

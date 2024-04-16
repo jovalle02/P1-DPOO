@@ -7,12 +7,14 @@ public class Factura {
 	private double valor;
 	private Usuario comprador;
 	private String id;
-	public Factura(String tipoDePago, double valor, Usuario comprador, String id) {
+	private String idPieza;
+	public Factura(String tipoDePago, double valor, Usuario comprador, String id, String idPieza) {
 		super();
 		this.tipoDePago = tipoDePago;
 		this.valor = valor;
 		this.comprador = comprador;
 		this.id = id;
+		this.idPieza= idPieza;
 	}
 	public String getTipoDePago() {
 		return tipoDePago;
@@ -25,6 +27,9 @@ public class Factura {
 	}
 	public String getId() {
 		return id;
+	}
+	public String getIdPieza() {
+		return idPieza;
 	}
 	
 }

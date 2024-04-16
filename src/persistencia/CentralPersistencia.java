@@ -189,6 +189,7 @@ public class CentralPersistencia {
 	        jFactura.put("valor", factura.getValor());
 	        jFactura.put("usuario", factura.getComprador().getId());
 	        jFactura.put("id", factura.getId());
+	        jFactura.put("id_pieza", factura.getIdPieza());
 	        jFacturas.put(jFactura);
 	    }
 
@@ -421,7 +422,8 @@ public class CentralPersistencia {
 		Usuario usuario = galeria.getUsuarioId(idUsuario);
 		//System.out.println("Verificando user "+usuario.getId());
 		String idFactura = factura.getString("id");
-		Factura newFactura = new Factura(tipoDePago, valor, usuario, idFactura);
+		String idPieza = factura.getString("id_pieza");
+		Factura newFactura = new Factura(tipoDePago, valor, usuario, idFactura, idPieza);
 		//System.out.println("Factura creada: "+newFactura.getComprador().getId());
 		galeria.agregarFactura(idFactura, newFactura);
 	}

@@ -1,5 +1,5 @@
 [
-    {"usuario":"0f4f8599-4924-411a-a463-4276f69854bc", "id":"84933","tipoDePago":"tarjeta", "valor":2000},
-        {"usuario":"0f4f8599-4924-411a-a463-4276f69854bc", "id":"79247","tipoDePago":"efectivo", "valor":300}
+    {"usuario":"0f4f8599-4924-411a-a463-4276f69854bc", "id":"84933","tipoDePago":"tarjeta", "valor":2000, "id_pieza":"Noche Estrellada"},
+        {"usuario":"0f4f8599-4924-411a-a463-4276f69854bc", "id":"79247","tipoDePago":"efectivo", "valor":300,"id_pieza":"Noche Estrellada"}
 
 ]
