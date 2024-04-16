@@ -10,12 +10,12 @@
     "titulo": "Noche Estrellada",
     "alto": 2,
     "autor": "Van Gogh",
-    "precio": 2000000,
+    "precio": 20000,
     "vendida": false,
     "ancho": 1,
     "tecnica": "Oleo",
     "lienzo": "Normal",
     "disponible": true,
     "id":"id_de_Vangó",
-    "valor":20000
+    "valor":2000
   }]

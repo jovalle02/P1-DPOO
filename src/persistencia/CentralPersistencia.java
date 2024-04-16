@@ -63,13 +63,14 @@ public class CentralPersistencia {
 	        Pieza pieza = entry.getValue();
 	        JSONObject jPieza = new JSONObject();
 	        jPieza.put("titulo", pieza.getTitulo());
+	        jPieza.put("id", pieza.getId());
 	        jPieza.put("ano", pieza.getAnioCreacion());
 	        jPieza.put("lugarDeCreacion", pieza.getLugarCreacion());
 	        jPieza.put("estado", pieza.getEstado());
 	        jPieza.put("valorFijo", pieza.isValorfijo());
 	        jPieza.put("disponible", pieza.isDisponible());
 	        jPieza.put("vendida", pieza.isVendida());
-	        jPieza.put("precio", pieza.getValor());
+	        jPieza.put("valor", pieza.getValor());
 	        jPieza.put("exhibicion", pieza.isExhibicion());
 	        jPieza.put("descripcion", pieza.getEstado());
 	        jPieza.put("autor", pieza.getAutor());
