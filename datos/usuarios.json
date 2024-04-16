@@ -25,7 +25,16 @@
     "email": "jose",
     "rol": "COMUN"
   },
-  "jose2": {
+  "admin": {
+    "password": "admin",
+    "apellido": "Admin",
+    "id": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
+    "login": "admin",
+    "nombre": "Admin",
+    "email": "admin@admin.com",
+    "rol": "ADMIN"
+  },
+  "joseeee": {
     "verificado": true,
     "password": "joseee",
     "apellido": "joseee",
@@ -37,27 +46,5 @@
     "piezas_actuales": [],
     "email": "josemario",
     "rol": "COMUN"
-  },
-  "admin": {
-    "password": "admin",
-    "apellido": "Admin",
-    "id": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
-    "login": "admin",
-    "nombre": "Admin",
-    "email": "admin@admin.com",
-    "rol": "ADMIN"
-  },
-  "joselito": {
-    "verificado": true,
-    "password": "jose",
-    "apellido": "jose",
-    "historial": ["Noche Estrellada"],
-    "id": "0f4f8599-4924-411a-a463-4276f69854bc",
-    "login": "joselito",
-    "topeDeCompra": 2000,
-    "nombre": "jose",
-    "piezas_actuales": ["Noche Estrellada"],
-    "email": "jose",
-    "rol": "EMPLEADO"
   }
 }

@@ -190,6 +190,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
+				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
 			default:

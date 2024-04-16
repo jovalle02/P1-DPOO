@@ -158,7 +158,9 @@ public class Galeria {
     //Crea un nuevo caso de verificación para que un administrador pueda aprobar o rechazar la compra.
     private void crearVerificacionCompra(UsuarioComun comprador, Pieza pieza) {
     	Verificacion verificacion = new Verificacion(comprador, pieza);
+    	//System.out.println(verificaciones.size());
     	verificaciones.add(verificacion);
+    	//System.out.println(verificaciones.size());
     }
     
     //Revisa todos los

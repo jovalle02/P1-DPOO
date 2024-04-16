@@ -166,17 +166,19 @@ public class CentralPersistencia {
 	    jPieza.put("estilo", pintura.getEstilo());
 	}
 	
-	public static void salvarVerificaciones(Galeria galeria, String archivo) {
-		List<Verificacion> listaVerificaciones = galeria.getVerificaciones();
+	public static void salvarVerificaciones(Galeria galeria, List<Verificacion> listaVerificaciones, String archivo) {
 	    JSONArray jVerificaciones = new JSONArray();
 	    for (Verificacion verificacion : listaVerificaciones) {
 	    	//System.out.println("Verificacion: "+verificacion.getUsuario().getId());
 	        JSONObject jVerificacion = new JSONObject();
-	        jVerificacion.put("usuario", verificacion.getUsuario().getId());
-	        jVerificacion.put("pieza", verificacion.getPieza().getId());
+	        String idUsuario = verificacion.getUsuario().getId();
+	        jVerificacion.put("usuario", idUsuario);
+	        String idPieza = verificacion.getPieza().getId();
+	        //System.out.println(idUsuario +" "+idPieza);
+	        jVerificacion.put("pieza", idPieza);
 	        jVerificaciones.put(jVerificacion);
 	    }
-
+	    System.out.println(jVerificaciones.toString());
 	    try (FileWriter file = new FileWriter(archivo)) {
 	        file.write(jVerificaciones.toString(2));
 	    } catch (IOException e) {
@@ -242,7 +244,9 @@ public class CentralPersistencia {
 		salvarPiezas(inventario, INVENTARIO__FILE);
 		salvarPiezas(historial, HISTORIAL__FILE);
 		//Salvar verificaciones
-		salvarVerificaciones(galeria, VERIFICACIONES__FILE);
+		//System.out.println("salvar galeria verificaciones size: "+ galeria.getVerificaciones().size());
+		salvarVerificaciones(galeria, galeria.getVerificaciones(), VERIFICACIONES__FILE);
+		//Salvar subastas
 		salvarSubastas(galeria, SUBASTAS__FILE);
 	}
 	
