@@ -74,7 +74,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
-				Map<String, Pieza> inventario = galeria.getInventario();
+				//Map<String, Pieza> inventario = galeria.getInventario();
 				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
@@ -103,6 +103,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			case 4:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
+				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
 			default:

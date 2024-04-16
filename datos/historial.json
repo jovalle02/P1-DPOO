@@ -7,15 +7,14 @@
   "ano": "2000",
   "valorFijo": true,
   "exhibicion": true,
+  "valor": 2000,
   "titulo": "Noche Estrellada",
   "alto": 2,
   "autor": "Van Gogh",
-  "precio": 20000,
   "vendida": false,
   "ancho": 1,
   "tecnica": "Oleo",
   "lienzo": "Normal",
-  "disponible": true,
-  "id":"id_de_Vangó",
-  "valor":2000
+  "id": "id_de_Vangó",
+  "disponible": true
 }]

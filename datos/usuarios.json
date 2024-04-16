@@ -1,3 +1,33 @@
-{"Test1":{"verificado":false,"password":"test1","fechaNacimiento":"12/01/2001","apellido":"Ovalle","id":"b53193e0-f305-4749-84d6-96b7374684c2","topeDeCompra":2000000,"nombre":"Jose ","email":"ja@ovalle.com","rol":"COMUN", "login":"Test1"},
-"jose":{"verificado":true,"password":"jose","fechaNacimiento":"12/01/2005","apellido":"jose","id":"0f4f8599-4924-411a-a463-4276f69854bc","nombre":"jose","email":"jose","rol":"COMUN", "login": "jose", "topeDeCompra":2000},
-"admin":{"password":"admin","fechaNacimiento":"01/01/2000","apellido":"Admin","id":"3647556c-cc83-46ec-80f1-5743b2bb72f4","nombre":"Admin","email":"admin@admin.com","rol":"ADMIN", "login":"Admin"}}
+{
+  "Test1": {
+    "verificado": false,
+    "password": "test1",
+    "apellido": "Ovalle",
+    "id": "b53193e0-f305-4749-84d6-96b7374684c2",
+    "login": "Test1",
+    "topeDeCompra": 2000000,
+    "nombre": "Jose ",
+    "email": "ja@ovalle.com",
+    "rol": "COMUN"
+  },
+  "jose": {
+    "verificado": true,
+    "password": "jose",
+    "apellido": "jose",
+    "id": "0f4f8599-4924-411a-a463-4276f69854bc",
+    "login": "jose",
+    "topeDeCompra": 2000,
+    "nombre": "jose",
+    "email": "jose",
+    "rol": "COMUN"
+  },
+  "Admin": {
+    "password": "admin",
+    "apellido": "Admin",
+    "id": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
+    "login": "Admin",
+    "nombre": "Admin",
+    "email": "admin@admin.com",
+    "rol": "ADMIN"
+  }
+}
