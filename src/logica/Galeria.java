@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import exceptions.PiezaNoDisponibleException;
 import persistencia.CentralPersistencia;
@@ -169,7 +170,8 @@ public class Galeria {
     		pieza.setVendida(true);
     		comprador.getHistorial().add(pieza);
     		comprador.getPiezasActuales().add(pieza);
-    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador);
+    		String facturaId = UUID.randomUUID().toString();
+    		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId);
     		comprador.getCompras().add(factura);
     		historialDeCompras.put(factura.getComprador().getId(), factura);
     		propietarios.put(comprador.getId(), comprador);

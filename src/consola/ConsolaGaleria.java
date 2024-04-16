@@ -1,12 +1,13 @@
 package consola;
 
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
 import exceptions.PiezaNoDisponibleException;
 import logica.Galeria;
+import logica.Verificacion;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -49,7 +50,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws PiezaNoDisponibleException {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Verificar compras", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -73,9 +74,21 @@ public class ConsolaGaleria extends ConsolaBasica {
 				galeria.consultarInventario();
 				break;
 			case 5:
+				System.out.println("Verificar compra de una Pieza");
+				Verificacion verificacion = imprimirVerificaciones();
+				if (verificacion != null) {
+					boolean ofertar = pedirConfirmacionAlUsuario("¿Desea confirmar esta verificacion?");
+					if (ofertar) {
+						String metodo = pedirCadenaAlUsuario("Cual es el metodo de pago?");
+						galeria.confirmarVenta(verificacion, ofertar, metodo);
+					} else {
+						System.out.println("Confirmacion cancelada");
+					}
+				}
+				break;
+			case 6:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
-				//Map<String, Pieza> inventario = galeria.getInventario();
 				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
@@ -288,6 +301,34 @@ public class ConsolaGaleria extends ConsolaBasica {
         }
         return pieza;
     }
-    
+    public Verificacion imprimirVerificaciones() {
+    	List<Verificacion> verificaciones = galeria.getVerificaciones();
+        if (verificaciones.isEmpty()) {
+            System.out.println("No hay verificaciones pendientes.");
+            return null;
+        }
+
+        System.out.println("Verificaciones Pendientes:");
+        int index = 1;
+        for (Verificacion verificacion : verificaciones) {
+            UsuarioComun usuario = verificacion.getUsuario();
+            Pieza pieza = verificacion.getPieza();
+            System.out.println("-----------------------------------");
+            System.out.println("Verificación" + " - "  + index);
+            System.out.println("Usuario: " + usuario.getId() + " - " + usuario.getNombre());
+            System.out.println("Pieza: " + pieza.getId() + " - " + pieza.getAutor());
+            System.out.println("Tipo de Pieza: " + pieza.getClass().getSimpleName());
+            System.out.println("Valor: " + pieza.getValor());
+            System.out.println("Estado de la Pieza: " + pieza.getEstado());
+            System.out.println("-----------------------------------");
+            index++;
+        }
+        int seleccion = pedirEnteroAlUsuario("Ingrese el numero de la verificacion que desea confirmar:");
+        if (seleccion < 1 || seleccion > verificaciones.size()) {
+            System.out.println("Selección inválida. Intente de nuevo.");
+            return null; 
+        }
+        return verificaciones.get(seleccion - 1);
+    }
     
 }
