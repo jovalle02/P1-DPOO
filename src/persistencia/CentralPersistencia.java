@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,7 @@ public class CentralPersistencia {
 	private static final String HISTORIAL__FILE = "datos/historial.json";
 	private static final String USUARIOS__FILE = "datos/usuarios.json";
 	private static final String VERIFICACIONES__FILE = "datos/verificaciones_compra.json";
+	private static final String FACTURAS__FILE = "datos/facturas.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -186,6 +188,7 @@ public class CentralPersistencia {
 	        jFactura.put("tipoDePago", factura.getTipoDePago());
 	        jFactura.put("valor", factura.getValor());
 	        jFactura.put("usuario", factura.getComprador().getId());
+	        jFactura.put("id", factura.getId());
 	        jFacturas.put(jFactura);
 	    }
 
@@ -388,7 +391,7 @@ public class CentralPersistencia {
 	    	Pieza obra = galeria.getPieza(idObra);
 	    	if(obra!=null) {
 	    		histLista.add(galeria.getPieza(idObra));
-	    		System.out.println(galeria.getPieza(idObra).getId());
+	    		//System.out.println(galeria.getPieza(idObra).getId());
 	    	}
 	    }
 	    
@@ -399,22 +402,36 @@ public class CentralPersistencia {
 	    	Pieza obra = galeria.getPieza(idObra);
 	    	if(obra!=null) {
 	    		piezasLista.add(galeria.getPieza(idObra));
-	    		System.out.println(galeria.getPieza(idObra).getId());
+	    		//System.out.println(galeria.getPieza(idObra).getId());
 	    	}
 	    	
 	    	
 	    }
-	    
+	    List<Factura>listCompras = new ArrayList<Factura>();
 	    // Create and add the UsuarioComun object to the map
-	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, histLista, piezasLista, null, verificado, topeDeCompra));
+	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, histLista, piezasLista, listCompras, verificado, topeDeCompra));
 	}
 
 	public static void cargarFacturas(Galeria galeria, JSONObject factura) {
 		double valor = factura.getDouble("valor");
 		String tipoDePago = factura.getString("tipoDePago");
 		String idUsuario = factura.getString("usuario");
-		Usuario usuario = galeria.getUsuarios().get(idUsuario);
-		//galeria.
+		//System.out.println(idUsuario);
+		//System.out.println(galeria.getUsuarioId(idUsuario));
+		Usuario usuario = galeria.getUsuarioId(idUsuario);
+		//System.out.println("Verificando user "+usuario.getId());
+		String idFactura = factura.getString("id");
+		Factura newFactura = new Factura(tipoDePago, valor, usuario, idFactura);
+		//System.out.println("Factura creada: "+newFactura.getComprador().getId());
+		galeria.agregarFactura(idFactura, newFactura);
+	}
+	
+	public static void agregarFacturasUsuarios(Galeria galeria) {
+		for (Factura factura: galeria.getHistorialDeCompras().values()	) {
+			//System.out.println("Dentro de agregar factura "+factura.getId());
+			UsuarioComun usuario = (UsuarioComun) factura.getComprador();
+			usuario.agregarCompra(factura);
+		}
 	}
 	public static void cargarGaleria(Galeria galeria) {
 		
@@ -457,6 +474,28 @@ public class CentralPersistencia {
             System.out.println("Error leyendo el archivo de verificaciones.");
         }
 		
+		//Carga las facturas
+		try {
+			String jsonFacturas = new String(Files.readAllBytes(Paths.get(FACTURAS__FILE)));
+		    JSONArray jFacturas = new JSONArray(jsonFacturas);
+		    for(int i=0; i<jFacturas.length();i++	) {
+		    	cargarFacturas(galeria, jFacturas.getJSONObject(i));
+		    }
+			agregarFacturasUsuarios(galeria);
+			/*
+			for (Usuario us: galeria.getUsuarios().values()) {
+				if(us instanceof UsuarioComun) {
+					for(Factura fact :((UsuarioComun) us).getCompras()) {
+						System.out.println(fact.getId());
+						System.out.println(fact.getComprador().getId());
+					}
+				}
+			}
+			*/
+			} catch (IOException e) {
+	            e.printStackTrace();
+	            System.out.println("Error leyendo el archivo de facturas.");
+	        }
 		
         
 	}

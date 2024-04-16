@@ -47,12 +47,19 @@ public class Galeria {
 	public void salvarGaleria () {
 		CentralPersistencia.salvarGaleria(this);
 	}
+	public void agregarFactura(String id, Factura factura) {
+		historialDeCompras.put(id, factura);
+	}
     public void agregarPiezaJSON(Pieza pieza, Map<String, Pieza> mapa) {
     	mapa.put(pieza.getId(), pieza);
     }
     public Map<String, Usuario> getUsuarios() {
 		return usuarios;
 	}
+    
+    public Usuario getUsuarioId(String id) {
+    	return usuarios.get(id);
+    }
 
 	public List<Verificacion> getVerificaciones() {
 		return verificaciones;
@@ -192,6 +199,10 @@ public class Galeria {
 
 	public Map<String, Pieza> getInventario() {
 		return inventario;
+	}
+
+	public Map<String, Factura> getHistorialDeCompras() {
+		return historialDeCompras;
 	}
 }
 
