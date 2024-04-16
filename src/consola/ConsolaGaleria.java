@@ -196,7 +196,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 	
 	private void menuSubastasUsuario() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Realizar oferta"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Realizar oferta", "Menu Principal"});
 		List<Subasta> subastas = galeria.getSubastas();
 		switch (opcion) {
 		case 1:
@@ -204,8 +204,19 @@ public class ConsolaGaleria extends ConsolaBasica {
 			    Subasta s = subastas.get(i);
 			    Pieza p = s.getPiezaSubastada();
 			    System.out.println(String.valueOf(i+1) + ". " + p.getTitulo());
+			    if (s.isActiva()) {
+			    	System.out.println("Estado: Activa");
+			    } else {
+
+			    	System.out.println("Estado: Terminada");
+			    }
 			    System.out.println("Valor minimo para ofertar: " + String.valueOf(s.getMayorOfrecido()) );
 			}
+			
+			if (subastas.size() == 0) {
+				System.out.println("No hay subastas disponibles");
+			}
+			
 			menuSubastasUsuario();
 			break;
 			
@@ -218,6 +229,11 @@ public class ConsolaGaleria extends ConsolaBasica {
 			} catch (Exception e){
 				e.printStackTrace();
 			}
+			menuSubastasUsuario();
+			break;
+		case 3:
+			menuUsuario();
+			break;
 		}
 	}
 	
