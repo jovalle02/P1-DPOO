@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -11,6 +12,7 @@ import org.json.JSONObject;
 
 import auth.Rol;
 import logica.Galeria;
+import logica.Verificacion;
 import piezas.Escultura;
 import piezas.Fotografia;
 import piezas.Impresion;
@@ -26,6 +28,7 @@ public class CentralPersistencia {
 	private static final String INVENTARIO__FILE = "datos/inventario.json";
 	private static final String HISTORIAL__FILE = "datos/historial.json";
 	private static final String USUARIOS__FILE = "datos/usuarios.json";
+	private static final String VERIFICACIONES__FILE = "datos/verificaciones_compra.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -144,16 +147,59 @@ public class CentralPersistencia {
 	    jPieza.put("estilo", pintura.getEstilo());
 	}
 	
+	public static void salvarVerificaciones(List<Verificacion> listaVerificaciones, String archivo) {
+	    JSONArray jVerificaciones = new JSONArray();
+	    for (Verificacion verificacion : listaVerificaciones) {
+	        JSONObject jVerificacion = new JSONObject();
+	        jVerificacion.put("usuario", verificacion.getUsuario().getLogin());
+	        jVerificacion.put("pieza", verificacion.getPieza().getId());
+	        jVerificaciones.put(jVerificacion);
+	    }
+
+	    try (FileWriter file = new FileWriter(archivo)) {
+	        file.write(jVerificaciones.toString(2));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
+
 	public static void salvarGaleria(Galeria galeria) {
 		//Salvar usuarios
 		Map<String, Usuario> usuarios = galeria.getUsuarios();
 		salvarUsuarios(usuarios, USUARIOS__FILE);
 		//Salvar piezas
 		Map<String, Pieza> inventario = galeria.getInventario();
-		System.out.println(inventario.keySet());
+		//System.out.println(inventario.keySet());
 		Map<String, Pieza> historial = galeria.getHistorial();
 		salvarPiezas(inventario, INVENTARIO__FILE);
 		salvarPiezas(historial, HISTORIAL__FILE);
+		//Salvar verificaciones
+		salvarVerificaciones(galeria.getVerificaciones(), VERIFICACIONES__FILE);
+	}
+	
+	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {
+		for (int i =0; i<arrayVerificaciones.length();i++) {
+			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
+			String usuario = verificacion.getString("usuario");
+			//System.out.println(usuario);
+			String pieza = verificacion.getString("pieza");
+			//System.out.println(pieza);
+			try {
+			//System.out.println(galeria.getUsuarios().keySet());
+			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
+			Pieza piezaAdd = galeria.getInventario().get(pieza);
+			List<Verificacion> newList = galeria.getVerificaciones();
+			Verificacion verificacionAdd = new Verificacion(usuarioAdd, piezaAdd);
+			newList.add(verificacionAdd);
+			galeria.setVerificaciones(newList);
+			}catch (Exception e) {
+	            e.printStackTrace();
+	            System.out.println("Una verificación de compra solo puede contener un usuario común.");
+	        }
+			
+			
+			
+		}
 	}
 	public static void cargarPiezas(Galeria galeria, JSONArray arrayPiezas,Map<String, Pieza> mapa) {
 	for (int i = 0; i < arrayPiezas.length(); i++) {
@@ -286,13 +332,13 @@ public class CentralPersistencia {
 	private static void cargarAdministrador(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                         String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Administrador object to the map
-	    mapaUsuarios.put(id, new Administrador(id, nombre, apellido, email, password, login,  rol));
+	    mapaUsuarios.put(login, new Administrador(id, nombre, apellido, email, password, login,  rol));
 	}
 
 	private static void cargarEmpleado(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
 	                                    String apellido, String email, String password, String login, Rol rol) {
 	    // Create and add the Empleado object to the map
-	    mapaUsuarios.put(id, new Empleado(id, nombre, apellido, email, password, login,rol));
+	    mapaUsuarios.put(login, new Empleado(id, nombre, apellido, email, password, login,rol));
 	}
 
 	private static void cargarUsuarioComun(Map<String, Usuario> mapaUsuarios, JSONObject usuario, String id, String nombre,
@@ -301,7 +347,7 @@ public class CentralPersistencia {
 	    boolean verificado = usuario.getBoolean("verificado");
 	    float topeDeCompra = usuario.getFloat("topeDeCompra");
 	    // Create and add the UsuarioComun object to the map
-	    mapaUsuarios.put(id, new UsuarioComun(id, nombre, apellido, email, password, login, rol, null, null, null, verificado, topeDeCompra));
+	    mapaUsuarios.put(login, new UsuarioComun(id, nombre, apellido, email, password, login, rol, null, null, null, verificado, topeDeCompra));
 	}
 
 
@@ -333,6 +379,17 @@ public class CentralPersistencia {
             e.printStackTrace();
             System.out.println("Error leyendo el archivo de piezas.");
         }
+		
+		//Carga las verificaciones 
+		try {
+		String jsonVerificaciones = new String(Files.readAllBytes(Paths.get(VERIFICACIONES__FILE)));
+	    JSONArray jVerificaciones = new JSONArray(jsonVerificaciones);
+		cargarVerificaciones(galeria, jVerificaciones);
+		} catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error leyendo el archivo de verificaciones.");
+        }
+		
 		
         
 	}

@@ -58,7 +58,11 @@ public class Galeria {
 		return verificaciones;
 	}
 
-    // Métodos para agregar cada tipo de pieza
+    public void setVerificaciones(List<Verificacion> verificaciones) {
+		this.verificaciones = verificaciones;
+	}
+
+	// Métodos para agregar cada tipo de pieza
     public void agregarPintura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String tecnica, String lienzo, String estilo) throws IOException {
         Pintura pintura = new Pintura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, tecnica, lienzo, estilo);
         inventario.put(pintura.getId(), pintura);
