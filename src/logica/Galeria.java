@@ -1,15 +1,13 @@
 package logica;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import exceptions.PiezaNoDisponibleException;
+import persistencia.CentralPersistencia;
 import piezas.Escultura;
 import piezas.Fotografia;
 import piezas.Impresion;
@@ -30,8 +28,8 @@ public class Galeria {
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
     // Constructor
     public Galeria() {
-    	inventario = new HashMap<>();
-    	historial = new HashMap<>();
+    	inventario = new HashMap<String, Pieza>();
+    	historial = new HashMap<String, Pieza>();
         usuarios = new HashMap<String, Usuario>();
         propietarios = new HashMap<>();
         compradores = new HashMap<>();
@@ -39,6 +37,16 @@ public class Galeria {
         verificaciones = new ArrayList<Verificacion>();
     }
     
+    public Map<String, Pieza> getHistorial() {
+		return historial;
+	}
+
+	public void cargarGaleria() {
+    	CentralPersistencia.cargarGaleria(this);
+    }
+	public void salvarGaleria () {
+		CentralPersistencia.salvarGaleria(this);
+	}
     public void agregarPiezaJSON(Pieza pieza, Map<String, Pieza> mapa) {
     	mapa.put(pieza.getId(), pieza);
     }

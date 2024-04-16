@@ -4,7 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.Map;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -21,7 +21,9 @@ import usuarios.Usuario;
 import usuarios.UsuarioComun;
 
 public class CentralPersistencia {
-	private static final String PIEZAS__FILE = "datos/piezas.json";
+	private static final String INVENTARIO__FILE = "datos/inventario.json";
+	private static final String HISTORIAL__FILE = "datos/historial.json";
+
 	public void salvarUsuarios(Galeria galeria, JSONObject jobject) {
 	    JSONArray jUsuarios = new JSONArray();
 	    for (Map.Entry<String, Usuario> entry : galeria.getUsuarios().entrySet()) {
@@ -45,7 +47,7 @@ public class CentralPersistencia {
 		jUsuario.put("verificado", usuario.isVerificado());
 		jUsuario.put("topeDeCompra", usuario.getTopeDeCompra());}
 	
-	public void salvarPiezas(Map<String, Pieza> mapaPiezas) {
+	public void salvarPiezas(Map<String, Pieza> mapaPiezas, String archivo) {
 	    JSONArray jPiezas = new JSONArray();
 	    for (Map.Entry<String, Pieza> entry : mapaPiezas.entrySet()) {
 	        Pieza pieza = entry.getValue();
@@ -78,7 +80,7 @@ public class CentralPersistencia {
 	        jPiezas.put(jPieza);
 	    }
 	    
-        try (FileWriter file = new FileWriter(PIEZAS__FILE)) {
+        try (FileWriter file = new FileWriter(archivo)) {
             file.write(jPiezas.toString(2));
         } catch (IOException e) {
             e.printStackTrace();
@@ -130,8 +132,11 @@ public class CentralPersistencia {
 	    jPieza.put("lienzo", pintura.getLienzo());
 	    jPieza.put("estilo", pintura.getEstilo());
 	}
-
-	public void cargarPiezas(Galeria galeria, JSONArray arrayPiezas,HashMap<String, Pieza> mapa) {
+	
+	public static void salvarGaleria(Galeria galeria) {
+		
+	}
+	public static void cargarPiezas(Galeria galeria, JSONArray arrayPiezas,Map<String, Pieza> mapa) {
 	for (int i = 0; i < arrayPiezas.length(); i++) {
 		JSONObject pieza = arrayPiezas.getJSONObject(i);
 		String id = pieza.getString("id");
@@ -167,7 +172,7 @@ public class CentralPersistencia {
 	        }
 	    }
 	}
-	private void cargarEscultura(Galeria galeria,HashMap<String, Pieza> mapa,  JSONObject pieza, String id, String titulo, String autor, String ano,
+	private static void cargarEscultura(Galeria galeria,Map<String, Pieza> mapa,  JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Escultura
@@ -181,7 +186,7 @@ public class CentralPersistencia {
 			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion),mapa);
 			}
 
-	private void cargarFotografia(Galeria galeria, HashMap<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
+	private static void cargarFotografia(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Fotografia
@@ -194,7 +199,7 @@ public class CentralPersistencia {
 			}
 
 
-	private void cargarImpresion(Galeria galeria, HashMap<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
+	private static void cargarImpresion(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Impresion
@@ -206,7 +211,7 @@ public class CentralPersistencia {
 			estado, alto, ancho, tipoImpresion, tamano, calidad), mapa);
 			}
 
-	private void cargarPintura(Galeria galeria, HashMap<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
+	private static void cargarPintura(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Pintura
@@ -219,7 +224,7 @@ public class CentralPersistencia {
 			}
 
 
-	private void cargarVideo(Galeria galeria, HashMap<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
+	private static void cargarVideo(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
             double alto, double ancho) {
 			// Extract additional attributes specific to Video
@@ -230,11 +235,33 @@ public class CentralPersistencia {
 			galeria.agregarPiezaJSON(new Video(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
 			estado, alto, ancho, formato, duracion, calidad), mapa);
 			}
+	
+	public static void cargarGaleria(Galeria galeria) {
+		//Salva los usuarios TODO 
+		//Salva las piezas
+		Map<String, Pieza> inventario = galeria.getInventario();
+		Map<String, Pieza> historial = galeria.getHistorial();
+		
+		try { 
+		String jsonDataInventario = new String(Files.readAllBytes(Paths.get(INVENTARIO__FILE)));
+        JSONArray jPiezasInventario = new JSONArray(jsonDataInventario);
+        cargarPiezas(galeria, jPiezasInventario, inventario);
+        
+        String jsonDataHistorial = new String(Files.readAllBytes(Paths.get(HISTORIAL__FILE)));
+        JSONArray jPiezasHistorial = new JSONArray(jsonDataHistorial);
+        cargarPiezas(galeria, jPiezasHistorial, inventario);
+		} catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error leyendo el archivo de piezas.");
+        }
+        
+	}
+}
 
 
 
 	
-	
+	/*
 	public void cargarPiezasDesdeJSON(Galeria galeria) {
         try {
             String jsonData = new String(Files.readAllBytes(Paths.get(PIEZAS__FILE)));
@@ -311,3 +338,4 @@ public class CentralPersistencia {
         }
     }
 }
+*/
