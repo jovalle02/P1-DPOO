@@ -25,7 +25,7 @@ import usuarios.UsuarioComun;
 public class CentralPersistencia {
 	private static final String INVENTARIO__FILE = "datos/inventario.json";
 	private static final String HISTORIAL__FILE = "datos/historial.json";
-	private static final String USUARIOS__FILE = "datos/listadoUsuarios.json";
+	private static final String USUARIOS__FILE = "datos/usuarios.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -253,9 +253,9 @@ public class CentralPersistencia {
 			estado, alto, ancho, formato, duracion, calidad), mapa);
 			}
 
-	public static void cargarUsuarios(Galeria galeria, JSONArray arrayUsuarios, Map<String, Usuario> mapaUsuarios) {
-	    for (int i = 0; i < arrayUsuarios.length(); i++) {
-	        JSONObject usuario = arrayUsuarios.getJSONObject(i);
+	public static void cargarUsuarios(Galeria galeria, JSONObject objUsuarios, Map<String, Usuario> mapaUsuarios) {
+	    for (String key: objUsuarios.keySet()) {
+	        JSONObject usuario = objUsuarios.getJSONObject(key);
 	        String id = usuario.getString("id");
 	        String nombre = usuario.getString("nombre");
 	        String apellido = usuario.getString("apellido");
@@ -308,7 +308,7 @@ public class CentralPersistencia {
 		Map<String,Usuario> usuarios = galeria.getUsuarios();
 		try { 
 			String jsonDataUsuarios = new String(Files.readAllBytes(Paths.get(USUARIOS__FILE)));
-	        JSONArray jPiezasUsuarios = new JSONArray(jsonDataUsuarios);
+	        JSONObject jPiezasUsuarios = new JSONObject(jsonDataUsuarios);
 	        cargarUsuarios(galeria, jPiezasUsuarios, usuarios);
 
 			} catch (IOException e) {

@@ -1,4 +1,0 @@
-[
-    {"password":"jose","fechaNacimiento":"12/01/2005","apellido":"jose","id":"0f4f8599-4924-411a-a463-4276f69854bc","nombre":"jose","email":"jose","rol":"COMUN", "login":"jose"},
-    {"password":"admin","fechaNacimiento":"01/01/2000","apellido":"Admin","id":"3647556c-cc83-46ec-80f1-5743b2bb72f4","nombre":"Admin","email":"admin@admin.com","rol":"ADMIN","login":"jose"}
-]
