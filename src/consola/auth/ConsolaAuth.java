@@ -1,12 +1,9 @@
 package consola.auth;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.text.ParseException;
 import java.util.UUID;
 
 import org.json.JSONObject;
