@@ -3,8 +3,6 @@ package logica;
 import java.util.ArrayList;
 import java.util.List;
 
-import exceptions.PrecioNoDentroDeRangoException;
-import exceptions.UsuarioNoVerificado;
 import piezas.Pieza;
 import usuarios.Usuario;
 import usuarios.UsuarioComun;
@@ -37,11 +35,11 @@ public class Subasta {
 				if (valor > this.getMayorOfrecido()) {
 					this.nuevoSubastador(user, valor);
 				} else {
-					throw new PrecioNoDentroDeRangoException(this.getValorMinimo());
+					throw new Exception("Error");
 				}
 				
 			} else {
-				throw new UsuarioNoVerificado("El usuario no esta verificado por lo que no puede ofertar");
+				throw new Exception("El usuario no esta verificado por lo que no puede ofertar");
 			}
 		} else {
 			throw new Exception("La subasta ya no esta recibiendo más ofertas");
