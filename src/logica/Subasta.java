@@ -98,6 +98,10 @@ public class Subasta {
 		return ofertadores;
 	}
 
+	public void setOfertadores(List<Usuario> ofertadores) {
+		this.ofertadores = ofertadores;
+	}
+
 	public Usuario getClienteMaximoOfrecido() {
 		return clienteMaximoOfrecido;
 	}

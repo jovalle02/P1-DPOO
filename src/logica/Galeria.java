@@ -214,5 +214,9 @@ public class Galeria {
 	public List<Subasta> getSubastas() {
 		return subastas;
 	}
+
+	public void setSubastas(List<Subasta> subastas) {
+		this.subastas = subastas;
+	}
 }
 

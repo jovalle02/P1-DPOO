@@ -25,6 +25,19 @@
     "email": "jose",
     "rol": "COMUN"
   },
+  "jose2": {
+    "verificado": true,
+    "password": "joseee",
+    "apellido": "joseee",
+    "historial": ["Noche Estrellada"],
+    "id": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "login": "joseeee",
+    "topeDeCompra": 2000,
+    "nombre": "josemario",
+    "piezas_actuales": [],
+    "email": "josemario",
+    "rol": "COMUN"
+  },
   "admin": {
     "password": "admin",
     "apellido": "Admin",

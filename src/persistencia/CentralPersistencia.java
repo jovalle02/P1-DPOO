@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 import auth.Rol;
 import logica.Factura;
 import logica.Galeria;
+import logica.Subasta;
 import logica.Verificacion;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -33,6 +33,7 @@ public class CentralPersistencia {
 	private static final String USUARIOS__FILE = "datos/usuarios.json";
 	private static final String VERIFICACIONES__FILE = "datos/verificaciones_compra.json";
 	private static final String FACTURAS__FILE = "datos/facturas.json";
+	private static final String SUBASTAS__FILE = "datos/subastas.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -202,6 +203,33 @@ public class CentralPersistencia {
 	    }
 	}
 
+	public static void salvarSubastas(Galeria galeria, String archivo) {
+	    List<Subasta> listaSubastas = galeria.getSubastas();
+	    JSONArray jSubastas = new JSONArray();
+	    for (Subasta subasta : listaSubastas) {
+	        JSONObject jSubasta = new JSONObject();
+	        jSubasta.put("id", subasta.getId());
+	        jSubasta.put("valorMinimo", subasta.getValorMinimo());
+	        jSubasta.put("valorInicial", subasta.getValorInicial());
+	        jSubasta.put("mayorOfrecido", subasta.getMayorOfrecido());
+	        jSubasta.put("operador", subasta.getOperador().getId());
+	        jSubasta.put("piezaSubastada", subasta.getPiezaSubastada().getId());
+	        jSubasta.put("clienteMaximoOfrecido", subasta.getClienteMaximoOfrecido().getId());
+
+	        JSONArray jOfertadores = new JSONArray();
+		    for (Usuario usuario: subasta.getOfertadores()) {
+		    	jOfertadores.put(usuario.getId());
+		    }
+			jSubasta.put("ofertadores", jOfertadores);
+	        jSubastas.put(jSubasta);
+	    }
+
+	    try (FileWriter file = new FileWriter(archivo)) {
+	        file.write(jSubastas.toString(2));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	public static void salvarGaleria(Galeria galeria) {
 		//Salvar usuarios
@@ -215,6 +243,7 @@ public class CentralPersistencia {
 		salvarPiezas(historial, HISTORIAL__FILE);
 		//Salvar verificaciones
 		salvarVerificaciones(galeria, VERIFICACIONES__FILE);
+		salvarSubastas(galeria, SUBASTAS__FILE);
 	}
 	
 	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {
@@ -222,9 +251,9 @@ public class CentralPersistencia {
 		for (int i =0; i<arrayVerificaciones.length();i++) {
 			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
 			String usuario = verificacion.getString("usuario");
-			System.out.println(usuario);
+			//System.out.println(usuario);
 			String pieza = verificacion.getString("pieza");
-			System.out.println(pieza);
+			//System.out.println(pieza);
 			try {
 			//System.out.println(galeria.getUsuarios().keySet());
 			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
@@ -434,6 +463,38 @@ public class CentralPersistencia {
 			usuario.agregarCompra(factura);
 		}
 	}
+	
+	public static void cargarSubastas (Galeria galeria, JSONArray arraySubastas) {
+		List<Subasta> newList = new ArrayList<Subasta>();
+		for (int i =0; i<arraySubastas.length();i++) {
+			JSONObject subasta = arraySubastas.getJSONObject(i);
+			String id = subasta.getString("id");
+			float valorMinimo  = subasta.getFloat("valorMinimo");
+			float valorInicial  = subasta.getFloat("valorInicial");
+			float mayorOfrecido  = subasta.getFloat("mayorOfrecido");
+			String idOperador = subasta.getString("operador");
+			Usuario operadorAdd = galeria.getUsuarios().get(idOperador);
+			String idClienteMaximo = subasta.getString("clienteMaximoOfrecido");
+			Usuario clienteMaximoAdd = galeria.getUsuarios().get(idClienteMaximo);
+			String piezaSubastada = subasta.getString("piezaSubastada");
+			Pieza piezaAdd = galeria.getInventario().get(piezaSubastada);
+			JSONArray ofertadores = subasta.getJSONArray("ofertadores");
+			List<Usuario>ofertadoresAdd = new ArrayList<Usuario>();
+			for(int j=0; j<ofertadores.length();j++) {
+				;
+				String ofertadorID = ofertadores.getString(j);
+				Usuario ofertador = galeria.getUsuarioId(ofertadorID);
+				ofertadoresAdd.add(ofertador);
+			}
+			Subasta subastaAdd = new Subasta(valorMinimo, valorInicial, operadorAdd, piezaAdd,id);
+			subastaAdd.setMayorOfrecido(mayorOfrecido);
+			subastaAdd.setOfertadores(ofertadoresAdd);
+			subastaAdd.setClienteMaximoOfrecido(clienteMaximoAdd);
+			newList.add(subastaAdd);
+			
+		}
+		galeria.setSubastas(newList);
+	}
 	public static void cargarGaleria(Galeria galeria) {
 		
 		//Carga las piezas
@@ -497,6 +558,26 @@ public class CentralPersistencia {
 	            e.printStackTrace();
 	            System.out.println("Error leyendo el archivo de facturas.");
 	        }
+		
+		//Carga las subastas.
+		try {
+			String jsonSubastas = new String(Files.readAllBytes(Paths.get(SUBASTAS__FILE)));
+		    JSONArray jSubastas = new JSONArray(jsonSubastas);
+		    cargarSubastas(galeria, jSubastas);
+
+			} catch (IOException e) {
+	            e.printStackTrace();
+	            System.out.println("Error leyendo el archivo de subastas.");
+	        }
+		/*
+		for (Subasta sub: galeria.getSubastas()) {
+			System.out.println(sub.getPiezaSubastada().getId());
+				for(Usuario us :sub.getOfertadores()) {
+					System.out.println(us.getId());
+					
+				}
+
+		}*/
 		
         
 	}
