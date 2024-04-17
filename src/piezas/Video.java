@@ -8,8 +8,8 @@ public class Video extends Pieza {
 
     // Constructor
     public Video(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado, double alto, double ancho,
-                 String formato, String duracion, String calidad) {
-        super(id, "Video", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
+                 String formato, String duracion, String calidad, boolean disponible, boolean vendida) {
+        super(id, "Video", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, disponible, vendida);
         this.formato = formato;
         this.duracion = duracion;
         this.calidad = calidad;

@@ -13,8 +13,8 @@ public class Escultura extends Pieza {
     // Constructor
     public Escultura(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado,
                      double alto, double ancho, double profundidad, String materiales, double peso,
-                     boolean necesitaElectricidad, String detallesInstalacion) {
-        super(id, "Escultura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
+                     boolean necesitaElectricidad, String detallesInstalacion, boolean disponible, boolean vendida) {
+        super(id, "Escultura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, disponible, vendida);
         this.profundidad = profundidad;
         this.materiales = materiales;
         this.peso = peso;

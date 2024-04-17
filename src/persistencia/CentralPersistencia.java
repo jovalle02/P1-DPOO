@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import org.json.JSONObject;
 import auth.Rol;
 import logica.Factura;
 import logica.Galeria;
+import logica.Subasta;
 import logica.Verificacion;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -33,6 +33,7 @@ public class CentralPersistencia {
 	private static final String USUARIOS__FILE = "datos/usuarios.json";
 	private static final String VERIFICACIONES__FILE = "datos/verificaciones_compra.json";
 	private static final String FACTURAS__FILE = "datos/facturas.json";
+	private static final String SUBASTAS__FILE = "datos/subastas.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -165,17 +166,19 @@ public class CentralPersistencia {
 	    jPieza.put("estilo", pintura.getEstilo());
 	}
 	
-	public static void salvarVerificaciones(Galeria galeria, String archivo) {
-		List<Verificacion> listaVerificaciones = galeria.getVerificaciones();
+	public static void salvarVerificaciones(Galeria galeria, List<Verificacion> listaVerificaciones, String archivo) {
 	    JSONArray jVerificaciones = new JSONArray();
 	    for (Verificacion verificacion : listaVerificaciones) {
 	    	//System.out.println("Verificacion: "+verificacion.getUsuario().getId());
 	        JSONObject jVerificacion = new JSONObject();
-	        jVerificacion.put("usuario", verificacion.getUsuario().getId());
-	        jVerificacion.put("pieza", verificacion.getPieza().getId());
+	        String idUsuario = verificacion.getUsuario().getId();
+	        jVerificacion.put("usuario", idUsuario);
+	        String idPieza = verificacion.getPieza().getId();
+	        //System.out.println(idUsuario +" "+idPieza);
+	        jVerificacion.put("pieza", idPieza);
 	        jVerificaciones.put(jVerificacion);
 	    }
-
+	    System.out.println(jVerificaciones.toString());
 	    try (FileWriter file = new FileWriter(archivo)) {
 	        file.write(jVerificaciones.toString(2));
 	    } catch (IOException e) {
@@ -202,6 +205,33 @@ public class CentralPersistencia {
 	    }
 	}
 
+	public static void salvarSubastas(Galeria galeria, String archivo) {
+	    List<Subasta> listaSubastas = galeria.getSubastas();
+	    JSONArray jSubastas = new JSONArray();
+	    for (Subasta subasta : listaSubastas) {
+	        JSONObject jSubasta = new JSONObject();
+	        jSubasta.put("id", subasta.getId());
+	        jSubasta.put("valorMinimo", subasta.getValorMinimo());
+	        jSubasta.put("valorInicial", subasta.getValorInicial());
+	        jSubasta.put("mayorOfrecido", subasta.getMayorOfrecido());
+	        jSubasta.put("operador", subasta.getOperador().getId());
+	        jSubasta.put("piezaSubastada", subasta.getPiezaSubastada().getId());
+	        jSubasta.put("clienteMaximoOfrecido", subasta.getClienteMaximoOfrecido().getId());
+
+	        JSONArray jOfertadores = new JSONArray();
+		    for (Usuario usuario: subasta.getOfertadores()) {
+		    	jOfertadores.put(usuario.getId());
+		    }
+			jSubasta.put("ofertadores", jOfertadores);
+	        jSubastas.put(jSubasta);
+	    }
+
+	    try (FileWriter file = new FileWriter(archivo)) {
+	        file.write(jSubastas.toString(2));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	public static void salvarGaleria(Galeria galeria) {
 		//Salvar usuarios
@@ -214,7 +244,10 @@ public class CentralPersistencia {
 		salvarPiezas(inventario, INVENTARIO__FILE);
 		salvarPiezas(historial, HISTORIAL__FILE);
 		//Salvar verificaciones
-		salvarVerificaciones(galeria, VERIFICACIONES__FILE);
+		//System.out.println("salvar galeria verificaciones size: "+ galeria.getVerificaciones().size());
+		salvarVerificaciones(galeria, galeria.getVerificaciones(), VERIFICACIONES__FILE);
+		//Salvar subastas
+		salvarSubastas(galeria, SUBASTAS__FILE);
 	}
 	
 	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {
@@ -222,9 +255,9 @@ public class CentralPersistencia {
 		for (int i =0; i<arrayVerificaciones.length();i++) {
 			JSONObject verificacion = arrayVerificaciones.getJSONObject(i);
 			String usuario = verificacion.getString("usuario");
-			System.out.println(usuario);
+			//System.out.println(usuario);
 			String pieza = verificacion.getString("pieza");
-			System.out.println(pieza);
+			//System.out.println(pieza);
 			try {
 			//System.out.println(galeria.getUsuarios().keySet());
 			UsuarioComun usuarioAdd = (UsuarioComun) galeria.getUsuarios().get(usuario);
@@ -252,21 +285,23 @@ public class CentralPersistencia {
 		String estado = pieza.getString("estado");
 		double alto = pieza.getDouble("alto");
 		double ancho = pieza.getDouble("ancho");
+		boolean disponible = pieza.getBoolean("disponible");
+		boolean vendida = pieza.getBoolean("vendida");
 	        switch (pieza.getString("tipo")) {
 	            case "Escultura":
-	                cargarEscultura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarEscultura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Fotografia":
-	                cargarFotografia(galeria, mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarFotografia(galeria, mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Impresion":
-	                cargarImpresion(galeria, mapa,pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarImpresion(galeria, mapa,pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Pintura":
-	                cargarPintura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarPintura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Video":
-	                cargarVideo(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarVideo(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            default:
 	                // Handle unknown type
@@ -276,7 +311,7 @@ public class CentralPersistencia {
 	}
 	private static void cargarEscultura(Galeria galeria,Map<String, Pieza> mapa,  JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Escultura
 			double profundidad = pieza.getDouble("profundidad"); 
 			String materiales = pieza.getString("materiales");
@@ -285,57 +320,57 @@ public class CentralPersistencia {
 			String detallesInstalacion = pieza.getString("detallesInstalacion"); 
 			// Add the Escultura object to the Galeria
 			galeria.agregarPiezaJSON(new Escultura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion),mapa);
+			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion, disponible, vendida),mapa);
 			}
 
 	private static void cargarFotografia(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Fotografia
 			String formato = pieza.getString("formato");
 			String tecnica = pieza.getString("tecnica");
 			double resolucion = pieza.getDouble("resolucion");
 			// Add the Fotografia object to the Galeria
 			galeria.agregarPiezaJSON(new Fotografia(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, formato, tecnica, resolucion), mapa);
+			estado, alto, ancho, formato, tecnica, resolucion, disponible, vendida), mapa);
 			}
 
 
 	private static void cargarImpresion(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Impresion
 			String tipoImpresion = pieza.getString("tipoImpresion");
 			String tamano = pieza.getString("tamano");
 			String calidad = pieza.getString("calidad");
 			// Add the Impresion object to the Galeria
 			galeria.agregarPiezaJSON(new Impresion(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, tipoImpresion, tamano, calidad), mapa);
+			estado, alto, ancho, tipoImpresion, tamano, calidad, disponible, vendida), mapa);
 			}
 
 	private static void cargarPintura(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Pintura
 			String tecnica = pieza.getString("tecnica");
 			String lienzo = pieza.getString("lienzo"); 
 			String estilo = pieza.getString("estilo");
 			// Add the Pintura object to the Galeria
 			galeria.agregarPiezaJSON(new Pintura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, tecnica, lienzo, estilo), mapa);
+			estado, alto, ancho, tecnica, lienzo, estilo, disponible, vendida), mapa);
 			}
 
 
 	private static void cargarVideo(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Video
 			String formato = pieza.getString("formato");
 			String duracion = pieza.getString("duracion"); 
 			String calidad = pieza.getString("calidad");
 			// Add the Video object to the Galeria
 			galeria.agregarPiezaJSON(new Video(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, formato, duracion, calidad), mapa);
+			estado, alto, ancho, formato, duracion, calidad, disponible, vendida), mapa);
 			}
 
 	public static void cargarUsuarios(Galeria galeria, JSONObject objUsuarios, Map<String, Usuario> mapaUsuarios) {
@@ -434,6 +469,38 @@ public class CentralPersistencia {
 			usuario.agregarCompra(factura);
 		}
 	}
+	
+	public static void cargarSubastas (Galeria galeria, JSONArray arraySubastas) {
+		List<Subasta> newList = new ArrayList<Subasta>();
+		for (int i =0; i<arraySubastas.length();i++) {
+			JSONObject subasta = arraySubastas.getJSONObject(i);
+			String id = subasta.getString("id");
+			float valorMinimo  = subasta.getFloat("valorMinimo");
+			float valorInicial  = subasta.getFloat("valorInicial");
+			float mayorOfrecido  = subasta.getFloat("mayorOfrecido");
+			String idOperador = subasta.getString("operador");
+			Usuario operadorAdd = galeria.getUsuarios().get(idOperador);
+			String idClienteMaximo = subasta.getString("clienteMaximoOfrecido");
+			Usuario clienteMaximoAdd = galeria.getUsuarios().get(idClienteMaximo);
+			String piezaSubastada = subasta.getString("piezaSubastada");
+			Pieza piezaAdd = galeria.getInventario().get(piezaSubastada);
+			JSONArray ofertadores = subasta.getJSONArray("ofertadores");
+			List<Usuario>ofertadoresAdd = new ArrayList<Usuario>();
+			for(int j=0; j<ofertadores.length();j++) {
+				;
+				String ofertadorID = ofertadores.getString(j);
+				Usuario ofertador = galeria.getUsuarioId(ofertadorID);
+				ofertadoresAdd.add(ofertador);
+			}
+			Subasta subastaAdd = new Subasta(valorMinimo, valorInicial, operadorAdd, piezaAdd,id);
+			subastaAdd.setMayorOfrecido(mayorOfrecido);
+			subastaAdd.setOfertadores(ofertadoresAdd);
+			subastaAdd.setClienteMaximoOfrecido(clienteMaximoAdd);
+			newList.add(subastaAdd);
+			
+		}
+		galeria.setSubastas(newList);
+	}
 	public static void cargarGaleria(Galeria galeria) {
 		
 		//Carga las piezas
@@ -497,6 +564,26 @@ public class CentralPersistencia {
 	            e.printStackTrace();
 	            System.out.println("Error leyendo el archivo de facturas.");
 	        }
+		
+		//Carga las subastas.
+		try {
+			String jsonSubastas = new String(Files.readAllBytes(Paths.get(SUBASTAS__FILE)));
+		    JSONArray jSubastas = new JSONArray(jsonSubastas);
+		    cargarSubastas(galeria, jSubastas);
+
+			} catch (IOException e) {
+	            e.printStackTrace();
+	            System.out.println("Error leyendo el archivo de subastas.");
+	        }
+		/*
+		for (Subasta sub: galeria.getSubastas()) {
+			System.out.println(sub.getPiezaSubastada().getId());
+				for(Usuario us :sub.getOfertadores()) {
+					System.out.println(us.getId());
+					
+				}
+
+		}*/
 		
         
 	}

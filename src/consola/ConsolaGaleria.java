@@ -51,7 +51,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Verificar compras", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compras", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -75,6 +75,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 				galeria.consultarInventario();
 				break;
 			case 5:
+				System.out.println("Modificar el tope de un usuario");
+				String id = pedirCadenaAlUsuario("Cual es el id del usuario?");
+				double nuevoTope = pedirNumeroAlUsuario("Ingrese el nuevo tope");
+				galeria.manipularTopeDeCompra(id, nuevoTope);
+				break;
+			case 6:
 				System.out.println("Verificar compra de una Pieza");
 				Verificacion verificacion = imprimirVerificaciones();
 				if (verificacion != null) {
@@ -84,13 +90,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 						galeria.confirmarVenta(verificacion, ofertar, metodo);
 						System.out.println("Verificacion confirmada exitosamente.");
 					} else {
-						String metodo = pedirCadenaAlUsuario("Cual es el metodo de pago?");
-						galeria.confirmarVenta(verificacion, ofertar, metodo);
+						galeria.confirmarVenta(verificacion, ofertar, null);
 						System.out.println("Verificacion rechazada exitosamente.");
 					}
 				}
 				break;
-			case 6:
+			case 7:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();
@@ -190,6 +195,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			case 5:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
+				galeria.salvarGaleria();
 				correrAplicacion();
 				break;
 			default:

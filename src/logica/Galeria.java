@@ -74,28 +74,28 @@ public class Galeria {
 
 	// Métodos para agregar cada tipo de pieza
     public void agregarPintura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String tecnica, String lienzo, String estilo) throws IOException {
-        Pintura pintura = new Pintura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, tecnica, lienzo, estilo);
+        Pintura pintura = new Pintura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, tecnica, lienzo, estilo, true, false);
         inventario.put(pintura.getId(), pintura);
         historial.put(pintura.getId(), pintura);
     }
 
     public void agregarEscultura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, double profundidad, String materiales, Double peso, boolean necesitaElectricidad, String detallesInstalacion) throws IOException {
         // Aquí puedes crear el objeto Escultura y agregarlo a la galería
-        Escultura escultura = new Escultura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, profundidad, materiales, peso, necesitaElectricidad, detallesInstalacion);
+        Escultura escultura = new Escultura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, profundidad, materiales, peso, necesitaElectricidad, detallesInstalacion, true, false);
         // Agregar la escultura a la galería
         inventario.put(escultura.getId(), escultura);
         historial.put(escultura.getId(), escultura);
     }
 
     public void agregarFotografia(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String formato, String tecnica, double resolucion) throws IOException {
-        Fotografia fotografia = new Fotografia(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,formato, tecnica, resolucion);
+        Fotografia fotografia = new Fotografia(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,formato, tecnica, resolucion, true, false);
         inventario.put(fotografia.getId(), fotografia);
         historial.put(fotografia.getId(), fotografia);
     }
 
     public void agregarImpresion(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String tipoImpresion, String tamano, String calidad) throws IOException {
         // Aquí puedes crear el objeto Impresion y agregarlo a la galería
-        Impresion impresion = new Impresion(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,tipoImpresion, tamano, calidad);
+        Impresion impresion = new Impresion(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,tipoImpresion, tamano, calidad, true, false);
      // Agregar la impresion a la galería
         inventario.put(impresion.getId(), impresion);
         historial.put(impresion.getId(), impresion);
@@ -103,7 +103,7 @@ public class Galeria {
 
     public void agregarVideo(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String formato, String duracion, String calidad) throws IOException {
         // Aquí puedes crear el objeto Video y agregarlo a la galería
-        Video video = new Video(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, formato, duracion, calidad);
+        Video video = new Video(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, formato, duracion, calidad, true, false);
         // Agregar el video a la galería
         inventario.put(video.getId(), video);
         historial.put(video.getId(), video);
@@ -149,6 +149,7 @@ public class Galeria {
     public void realizarCompra(UsuarioComun comprador, Pieza pieza) throws PiezaNoDisponibleException {
     	if (pieza.isDisponible()) {
         pieza.setDisponible(false); //Pone la pieza como no disponible
+        inventario.put(pieza.getId(), pieza);
         crearVerificacionCompra(comprador, pieza);
     	}else {
     		throw new PiezaNoDisponibleException(pieza.getId());
@@ -158,11 +159,22 @@ public class Galeria {
     //Crea un nuevo caso de verificación para que un administrador pueda aprobar o rechazar la compra.
     private void crearVerificacionCompra(UsuarioComun comprador, Pieza pieza) {
     	Verificacion verificacion = new Verificacion(comprador, pieza);
+    	//System.out.println(verificaciones.size());
     	verificaciones.add(verificacion);
+    	//System.out.println(verificaciones.size());
     }
     
     //Revisa todos los
-    
+    public void manipularTopeDeCompra(String idUsuario, double nuevoTope) {
+        Usuario usuario = usuarios.get(idUsuario);
+        if (usuario instanceof UsuarioComun) {
+            UsuarioComun usuarioComun = (UsuarioComun) usuario;
+            usuarioComun.setTopeDeCompra((float) nuevoTope);
+            System.out.println("Tope de compra actualizado correctamente para el usuario " + usuarioComun.getNombre());
+        } else {
+            System.out.println("El usuario no es un Usuario Comun. No se puede manipular su tope de compra.");
+        }
+    }
     
     //Dado un caso pendiente de verificacion y la respuesta dada, se añadirá la pieza al comprador o, por el contrario, se pondrá de nuevo en venta.
     public void confirmarVenta(Verificacion verificacion, boolean aprobar, String medioPago) {
@@ -170,6 +182,7 @@ public class Galeria {
     	Pieza pieza = verificacion.getPieza();
     	if(aprobar) {
     		pieza.setVendida(true);
+    		pieza.setDisponible(false);
     		comprador.getHistorial().add(pieza);
     		comprador.getPiezasActuales().add(pieza);
     		String facturaId = UUID.randomUUID().toString();
@@ -179,6 +192,7 @@ public class Galeria {
     		propietarios.put(comprador.getId(), comprador);
     		compradores.put(comprador.getId(), comprador);
     		verificaciones.remove(verificacion);
+    		inventario.put(pieza.getId(), pieza);
     	}else {
     		pieza.setDisponible(true);
     		verificaciones.remove(verificacion);
@@ -213,6 +227,10 @@ public class Galeria {
 
 	public List<Subasta> getSubastas() {
 		return subastas;
+	}
+
+	public void setSubastas(List<Subasta> subastas) {
+		this.subastas = subastas;
 	}
 }
 
