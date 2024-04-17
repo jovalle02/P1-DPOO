@@ -270,6 +270,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			
 			Subasta nuevaSubasta = new Subasta(valorMinimo, valorInicial, usuario, pieza, UUID.randomUUID().toString());
 			nuevaSubasta.setClienteMaximoOfrecido(usuario);
+			nuevaSubasta.setActiva(true);
 			subastas.add(nuevaSubasta);
 			
 			this.galeria.setSubastas(subastas);
