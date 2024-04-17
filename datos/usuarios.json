@@ -33,18 +33,5 @@
     "nombre": "Admin",
     "email": "admin@admin.com",
     "rol": "ADMIN"
-  },
-  "joselito": {
-    "verificado": true,
-    "password": "jose",
-    "apellido": "jose",
-    "historial": ["Noche Estrellada"],
-    "id": "0f4f8599-4924-411a-a463-4276f69854bc",
-    "login": "joselito",
-    "topeDeCompra": 2000,
-    "nombre": "jose",
-    "piezas_actuales": ["Noche Estrellada"],
-    "email": "jose",
-    "rol": "EMPLEADO"
   }
 }

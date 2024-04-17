@@ -249,7 +249,8 @@ public class ConsolaGaleria extends ConsolaBasica {
 		case 3:
 			int id = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
 			Subasta subasta = subastas.get(id - 1);
-			
+			Pieza piezaSubastada = subasta.getPiezaSubastada();
+			galeria.realizarCompra((UsuarioComun) usuario, piezaSubastada);
 			menuSubastasEmpleado();
 			break;
 		case 4:
