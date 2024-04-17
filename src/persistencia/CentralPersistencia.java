@@ -285,21 +285,23 @@ public class CentralPersistencia {
 		String estado = pieza.getString("estado");
 		double alto = pieza.getDouble("alto");
 		double ancho = pieza.getDouble("ancho");
+		boolean disponible = pieza.getBoolean("disponible");
+		boolean vendida = pieza.getBoolean("vendida");
 	        switch (pieza.getString("tipo")) {
 	            case "Escultura":
-	                cargarEscultura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarEscultura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Fotografia":
-	                cargarFotografia(galeria, mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarFotografia(galeria, mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Impresion":
-	                cargarImpresion(galeria, mapa,pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarImpresion(galeria, mapa,pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Pintura":
-	                cargarPintura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarPintura(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            case "Video":
-	                cargarVideo(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho);
+	                cargarVideo(galeria,mapa, pieza, id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo, estado, alto, ancho, disponible, vendida);
 	                break;
 	            default:
 	                // Handle unknown type
@@ -309,7 +311,7 @@ public class CentralPersistencia {
 	}
 	private static void cargarEscultura(Galeria galeria,Map<String, Pieza> mapa,  JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Escultura
 			double profundidad = pieza.getDouble("profundidad"); 
 			String materiales = pieza.getString("materiales");
@@ -318,57 +320,57 @@ public class CentralPersistencia {
 			String detallesInstalacion = pieza.getString("detallesInstalacion"); 
 			// Add the Escultura object to the Galeria
 			galeria.agregarPiezaJSON(new Escultura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion),mapa);
+			estado, alto, ancho, profundidad, materiales, peso, electricidad, detallesInstalacion, disponible, vendida),mapa);
 			}
 
 	private static void cargarFotografia(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Fotografia
 			String formato = pieza.getString("formato");
 			String tecnica = pieza.getString("tecnica");
 			double resolucion = pieza.getDouble("resolucion");
 			// Add the Fotografia object to the Galeria
 			galeria.agregarPiezaJSON(new Fotografia(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, formato, tecnica, resolucion), mapa);
+			estado, alto, ancho, formato, tecnica, resolucion, disponible, vendida), mapa);
 			}
 
 
 	private static void cargarImpresion(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Impresion
 			String tipoImpresion = pieza.getString("tipoImpresion");
 			String tamano = pieza.getString("tamano");
 			String calidad = pieza.getString("calidad");
 			// Add the Impresion object to the Galeria
 			galeria.agregarPiezaJSON(new Impresion(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, tipoImpresion, tamano, calidad), mapa);
+			estado, alto, ancho, tipoImpresion, tamano, calidad, disponible, vendida), mapa);
 			}
 
 	private static void cargarPintura(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Pintura
 			String tecnica = pieza.getString("tecnica");
 			String lienzo = pieza.getString("lienzo"); 
 			String estilo = pieza.getString("estilo");
 			// Add the Pintura object to the Galeria
 			galeria.agregarPiezaJSON(new Pintura(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, tecnica, lienzo, estilo), mapa);
+			estado, alto, ancho, tecnica, lienzo, estilo, disponible, vendida), mapa);
 			}
 
 
 	private static void cargarVideo(Galeria galeria, Map<String, Pieza> mapa, JSONObject pieza, String id, String titulo, String autor, String ano,
             String lugarDeCreacion, boolean exhibicion, double valor, boolean valorFijo, String estado,
-            double alto, double ancho) {
+            double alto, double ancho, boolean disponible, boolean vendida) {
 			// Extract additional attributes specific to Video
 			String formato = pieza.getString("formato");
 			String duracion = pieza.getString("duracion"); 
 			String calidad = pieza.getString("calidad");
 			// Add the Video object to the Galeria
 			galeria.agregarPiezaJSON(new Video(id, titulo, autor, ano, lugarDeCreacion, exhibicion, valor, valorFijo,
-			estado, alto, ancho, formato, duracion, calidad), mapa);
+			estado, alto, ancho, formato, duracion, calidad, disponible, vendida), mapa);
 			}
 
 	public static void cargarUsuarios(Galeria galeria, JSONObject objUsuarios, Map<String, Usuario> mapaUsuarios) {

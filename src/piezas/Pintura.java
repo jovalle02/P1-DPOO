@@ -8,8 +8,8 @@ public class Pintura extends Pieza {
 
     // Constructor
     public Pintura(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo, String estado, double alto, double ancho,
-                      String tecnica, String lienzo, String estilo) {
-        super(id, "Pintura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho);
+                      String tecnica, String lienzo, String estilo, boolean disponible, boolean vendida) {
+        super(id, "Pintura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, disponible, vendida);
         this.tecnica = tecnica;
         this.lienzo = lienzo;
         this.estilo = estilo;

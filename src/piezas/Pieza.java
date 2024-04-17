@@ -19,7 +19,7 @@ public abstract class Pieza {
     // Otros atributos según tus necesidades
 
     // Constructor
-    public Pieza(String id, String tipo, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo, String estado, double alto, double ancho) {
+    public Pieza(String id, String tipo, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo, String estado, double alto, double ancho, boolean disponible, boolean vendida) {
         this.id = id;
         this.tipo = tipo;
         this.titulo = titulo;
@@ -28,8 +28,8 @@ public abstract class Pieza {
         this.lugarCreacion = lugarCreacion;
         this.exhibicion = exhibicion;
         this.valor = valor;
-        this.disponible = true;
-        this.vendida = false;
+        this.disponible = disponible;
+        this.vendida = vendida;
         this.valorfijo = valorfijo;
         this.estado=estado;
         this.alto= alto;
