@@ -258,6 +258,8 @@ public class ConsolaGaleria extends ConsolaBasica {
 			Subasta subasta = subastas.get(id - 1);
 			Pieza piezaSubastada = subasta.getPiezaSubastada();
 			galeria.realizarCompra((UsuarioComun) subasta.getClienteMaximoOfrecido(), piezaSubastada);
+			List<Verificacion> verificaciones = galeria.getVerificaciones(); 
+			galeria.confirmarVenta(verificaciones.get(verificaciones.size()-1), autenticado, "tarjeta");
 			menuSubastasEmpleado();
 			break;
 		case 4:
