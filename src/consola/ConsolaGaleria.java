@@ -215,7 +215,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			for (int i = 0; i < subastas.size(); i++) {
 			    Subasta s = subastas.get(i);
 			    Pieza p = s.getPiezaSubastada();
-			    System.out.println("Numero de subasta: " + String.valueOf(i-1));
+			    System.out.println("Numero de subasta: " + String.valueOf(i+1));
 			    this.imprimirDetallesPieza(p.getId());
 			    if (s.isActiva()) {
 			    	System.out.println("Estado subasta: Activa");
@@ -234,7 +234,8 @@ public class ConsolaGaleria extends ConsolaBasica {
 			int idSubasta = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
 			Subasta s = subastas.get(idSubasta - 1);
 			Pieza p = s.getPiezaSubastada();
-		    System.out.println("Numero de subasta: " + String.valueOf(idSubasta-1));
+		    System.out.println("Numero de subasta: " + String.valueOf(idSubasta+1));
+		    System.out.println("---------------------------");
 		    this.imprimirDetallesPieza(p.getId());
 		    if (s.isActiva()) {
 		    	System.out.println("Estado subasta: Activa");
@@ -256,7 +257,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			int id = pedirEnteroAlUsuario("Ingrese el numero de la subasta");
 			Subasta subasta = subastas.get(id - 1);
 			Pieza piezaSubastada = subasta.getPiezaSubastada();
-			galeria.realizarCompra((UsuarioComun) usuario, piezaSubastada);
+			galeria.realizarCompra((UsuarioComun) subasta.getClienteMaximoOfrecido(), piezaSubastada);
 			menuSubastasEmpleado();
 			break;
 		case 4:
@@ -286,6 +287,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 			    Subasta s = subastas.get(i);
 			    Pieza p = s.getPiezaSubastada();
 			    System.out.println("Numero de subasta: " + String.valueOf(i+1));
+			    System.out.println("---------------------------");
 			    this.imprimirDetallesPieza(p.getId());
 			    if (s.isActiva()) {
 			    	System.out.println("Estado subasta: Activa");
