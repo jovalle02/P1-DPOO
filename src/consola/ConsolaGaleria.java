@@ -268,8 +268,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 			String idPieza = pedirCadenaAlUsuario("Ingrese el nombre de la pieza la cual desea subastar");
 			Pieza pieza = galeria.getPieza(idPieza);
 			
-			Subasta nuevaSubasta = new Subasta(valorMinimo, valorInicial, this.usuario, pieza, UUID.randomUUID().toString());
+			Subasta nuevaSubasta = new Subasta(valorMinimo, valorInicial, usuario, pieza, UUID.randomUUID().toString());
+			nuevaSubasta.setClienteMaximoOfrecido(usuario);
+			nuevaSubasta.setActiva(true);
 			subastas.add(nuevaSubasta);
+			
+			this.galeria.setSubastas(subastas);
 			menuSubastasEmpleado();
 			break;
 		case 5:

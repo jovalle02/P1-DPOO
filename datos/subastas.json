@@ -1,13 +1,55 @@
-[{
-  "mayorOfrecido": 150,
-  "piezaSubastada": "Noche Estrellada",
-  "ofertadores": [
-    "0f4f8599-4924-411a-a463-4276f69854bc",
-    "0c4f9799-4924-411a-a463-4246f69854bc"
-  ],
-  "valorInicial": 100,
-  "id": "1984",
-  "valorMinimo": 200,
-  "operador": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
-  "clienteMaximoOfrecido": "0f4f8599-4924-411a-a463-4276f69854bc"
-}]
+[
+  {
+    "mayorOfrecido": 150,
+    "piezaSubastada": "Noche Estrellada",
+    "ofertadores": [
+      "0f4f8599-4924-411a-a463-4276f69854bc",
+      "0c4f9799-4924-411a-a463-4246f69854bc"
+    ],
+    "valorInicial": 100,
+    "id": "1984",
+    "valorMinimo": 200,
+    "operador": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
+    "clienteMaximoOfrecido": "0f4f8599-4924-411a-a463-4276f69854bc"
+  },
+  {
+    "mayorOfrecido": 10,
+    "piezaSubastada": "Noche Estrellada",
+    "ofertadores": [],
+    "valorInicial": 1,
+    "id": "3035505f-bf7b-4b37-b575-801d14d1be2c",
+    "valorMinimo": 10,
+    "operador": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "clienteMaximoOfrecido": "0c4f9799-4924-411a-a463-4246f69854bc"
+  },
+  {
+    "mayorOfrecido": 10,
+    "piezaSubastada": "Noche Estrellada",
+    "ofertadores": [],
+    "valorInicial": 1,
+    "id": "9b0b5b38-b633-41b9-9d05-b3371c68c15d",
+    "valorMinimo": 10,
+    "operador": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "clienteMaximoOfrecido": "0c4f9799-4924-411a-a463-4246f69854bc"
+  },
+  {
+    "mayorOfrecido": 10,
+    "piezaSubastada": "Noche Estrellada",
+    "ofertadores": [],
+    "valorInicial": 2,
+    "id": "5f2d0c0d-1ae4-4efc-821e-e0ba7b227a95",
+    "valorMinimo": 10,
+    "operador": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "clienteMaximoOfrecido": "0c4f9799-4924-411a-a463-4246f69854bc"
+  },
+  {
+    "mayorOfrecido": 15,
+    "piezaSubastada": "Noche Estrellada",
+    "ofertadores": ["0f4f8599-4924-411a-a463-4276f69854bc"],
+    "valorInicial": 1,
+    "id": "ece20dd3-4c7a-42e4-bb3e-f87e190070c0",
+    "valorMinimo": 10,
+    "operador": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "clienteMaximoOfrecido": "0f4f8599-4924-411a-a463-4276f69854bc"
+  }
+]
