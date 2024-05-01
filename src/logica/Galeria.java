@@ -1,7 +1,10 @@
 package logica;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -200,6 +203,37 @@ public class Galeria {
     		pieza.setDisponible(true);
     		verificaciones.remove(verificacion);
     	}
+    }
+
+    public Usuario getCurrentOwner(String idPieza) {
+        Factura latestFactura = null;
+        Date latestDate = null;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Iterate through all the entries in the historialDeCompras map
+        for (Factura factura : historialDeCompras.values()) {
+            if (factura.getIdPieza().equals(idPieza)) {
+                try {
+                    Date transactionDate = dateFormat.parse(factura.getFecha());
+                    // Check if this is the most recent transaction
+                    if (latestDate == null || transactionDate.after(latestDate)) {
+                        latestDate = transactionDate;
+                        latestFactura = factura;
+                    }
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // If a latest transaction is found, return the owner
+        if (latestFactura != null) {
+        	System.out.println(latestFactura.getComprador().getNombre());
+            return latestFactura.getComprador();
+        }
+
+        // If no transaction is found, return null
+        return null;
     }
 
     

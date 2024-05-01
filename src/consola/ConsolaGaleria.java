@@ -51,7 +51,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compras", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -67,11 +67,11 @@ public class ConsolaGaleria extends ConsolaBasica {
 				System.out.println("La pieza se ha eliminado exitosamente!");
 				break;
 			case 3:
-				System.out.println("Consultar inventario de la galeria");
+				System.out.println("Vender una pieza");
 				galeria.consultarInventario();
 				break;
 			case 4:
-				System.out.println("Vender una pieza");
+				System.out.println("Consultar inventario de la galeria");
 				galeria.consultarInventario();
 				break;
 			case 5:
