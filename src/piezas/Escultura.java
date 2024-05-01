@@ -21,6 +21,17 @@ public class Escultura extends Pieza {
         this.necesitaElectricidad = necesitaElectricidad;
         this.detallesInstalacion = detallesInstalacion;
     }
+    
+    public Escultura(String id, String titulo, String autor, String anioCreacion, String lugarCreacion, Boolean exhibicion, double valor, Boolean valorfijo,String estado,
+            double alto, double ancho, double profundidad, String materiales, double peso,
+            boolean necesitaElectricidad, String detallesInstalacion, boolean disponible, boolean vendida, String fechaCreacion) {
+super(id, "Escultura", titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho, disponible, vendida);
+this.profundidad = profundidad;
+this.materiales = materiales;
+this.peso = peso;
+this.necesitaElectricidad = necesitaElectricidad;
+this.detallesInstalacion = detallesInstalacion;
+}
 
     // Getters y setters para los atributos específicos de esculturas
     public double getAlto() {

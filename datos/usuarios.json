@@ -46,18 +46,5 @@
     "piezas_actuales": [],
     "email": "josemario",
     "rol": "COMUN"
-  },
-  "joselito": {
-    "verificado": true,
-    "password": "jose",
-    "apellido": "joseee",
-    "historial": [],
-    "id": "0c4f9799-4924-411a-a463-4246f69854bc",
-    "login": "joselito",
-    "topeDeCompra": 2000,
-    "nombre": "josemario",
-    "piezas_actuales": [],
-    "email": "josemario",
-    "rol": "EMPLEADO"
   }
 }

@@ -1,5 +1,10 @@
 package piezas;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public abstract class Pieza {
     // Atributos
     private String id;
@@ -16,6 +21,7 @@ public abstract class Pieza {
     private String estado;
     private double alto;
     private double ancho;
+
     // Otros atributos según tus necesidades
 
     // Constructor
@@ -35,7 +41,7 @@ public abstract class Pieza {
         this.alto= alto;
         this.ancho= ancho;
     }
-
+ 
     // Getters y setters
     public String getId() {
         return id;

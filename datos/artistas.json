@@ -1,0 +1,15 @@
+[
+  {
+    "piezas_vendidas": [],
+    "piezas_hechas": ["Mona Lisa"],
+    "nombre": "DaVincci"
+  },
+  {
+    "piezas_vendidas": [
+      "84933",
+      "79247"
+    ],
+    "piezas_hechas": ["Noche Estrellada"],
+    "nombre": "Van Gogh"
+  }
+]

@@ -7,11 +7,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import auth.Rol;
+import logica.Artista;
 import logica.Factura;
 import logica.Galeria;
 import logica.Subasta;
@@ -34,6 +36,7 @@ public class CentralPersistencia {
 	private static final String VERIFICACIONES__FILE = "datos/verificaciones_compra.json";
 	private static final String FACTURAS__FILE = "datos/facturas.json";
 	private static final String SUBASTAS__FILE = "datos/subastas.json";
+	private static final String ARTISTAS__FILE = "datos/artistas.json";
 
 
 	public static void salvarUsuarios(Map<String,Usuario> mapa, String archivo) {
@@ -195,6 +198,7 @@ public class CentralPersistencia {
 	        jFactura.put("usuario", factura.getComprador().getId());
 	        jFactura.put("id", factura.getId());
 	        jFactura.put("id_pieza", factura.getIdPieza());
+	        jFactura.put("fecha", factura.getFecha());
 	        jFacturas.put(jFactura);
 	    }
 
@@ -232,6 +236,37 @@ public class CentralPersistencia {
 	        e.printStackTrace();
 	    }
 	}
+	
+	public static void salvarArtistas(Galeria galeria, String archivo) {
+	    Set<String> artistas = galeria.getSetArtistas();
+	    JSONArray jArtistas = new JSONArray();
+	    for (String artistaNom : artistas) {
+	    	Artista artista = galeria.getArtistaNombre(artistaNom);
+	        JSONObject jArtista = new JSONObject();
+	        jArtista.put("nombre", artista.getNombre());
+	        
+
+	        JSONArray jPiezasVendidas = new JSONArray(); //Dentro del JSON se guardará el ID de la factura asociada
+		    for (String facturaID: artista.getPiezasVendidas().keySet()) {
+		    	jPiezasVendidas.put(facturaID);
+		    }
+			jArtista.put("piezas_vendidas", jPiezasVendidas);
+			
+			JSONArray jPiezasHechas = new JSONArray(); //Dentro del JSON se guardará el ID de la pieza asociada
+		    for (String piezaID: artista.getPiezasHechas().keySet()) {
+		    	jPiezasHechas.put(piezaID);
+		    }
+			jArtista.put("piezas_hechas", jPiezasHechas);
+			
+	        jArtistas.put(jArtista);
+	    }
+
+	    try (FileWriter file = new FileWriter(archivo)) {
+	        file.write(jArtistas.toString(2));
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 
 	public static void salvarGaleria(Galeria galeria) {
 		//Salvar usuarios
@@ -248,6 +283,8 @@ public class CentralPersistencia {
 		salvarVerificaciones(galeria, galeria.getVerificaciones(), VERIFICACIONES__FILE);
 		//Salvar subastas
 		salvarSubastas(galeria, SUBASTAS__FILE);
+		//Salvar artistas
+		salvarArtistas(galeria, ARTISTAS__FILE);
 	}
 	
 	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {
@@ -457,7 +494,8 @@ public class CentralPersistencia {
 		//System.out.println("Verificando user "+usuario.getId());
 		String idFactura = factura.getString("id");
 		String idPieza = factura.getString("id_pieza");
-		Factura newFactura = new Factura(tipoDePago, valor, usuario, idFactura, idPieza);
+		String fecha = factura.getString("fecha");
+		Factura newFactura = new Factura(tipoDePago, valor, usuario, idFactura, idPieza, fecha);
 		//System.out.println("Factura creada: "+newFactura.getComprador().getId());
 		galeria.agregarFactura(idFactura, newFactura);
 	}
@@ -501,6 +539,38 @@ public class CentralPersistencia {
 		}
 		galeria.setSubastas(newList);
 	}
+	
+	public static void cargarArtistas (Galeria galeria, JSONArray arrayArtistas) {
+		for (int i =0; i<arrayArtistas.length();i++) {
+			JSONObject artistaJSON = arrayArtistas.getJSONObject(i);
+			String nombre = artistaJSON.getString("nombre");
+			Artista artista = new Artista(nombre);
+			
+			JSONArray piezasHechas = artistaJSON.getJSONArray("piezas_hechas");
+			for(int j=0; j<piezasHechas.length();j++) {
+				String piezaID = piezasHechas.getString(j);
+				try {
+				Pieza pieza = galeria.getPieza(piezaID);
+				artista.agregarPiezaHecha(pieza);
+				}catch(Exception e) {
+					System.out.println("No es posible encontrar una pieza con este id: "+piezaID);
+				}
+			}
+			JSONArray piezasVendidas = artistaJSON.getJSONArray("piezas_vendidas");
+			for(int j=0; j<piezasVendidas.length();j++) {
+				String facturaID = piezasVendidas.getString(j);
+				try {
+				Factura factura = galeria.getFacturaID(facturaID);
+				artista.agregarPiezaVendida(factura);
+				}catch(Exception e) {
+					System.out.println("No es posible encontrar una factura con este id: "+ facturaID);
+				}
+			}
+			
+			galeria.agregarArtista(artista);
+		} 
+	}
+	
 	public static void cargarGaleria(Galeria galeria) {
 		
 		//Carga las piezas
@@ -575,6 +645,16 @@ public class CentralPersistencia {
 	            e.printStackTrace();
 	            System.out.println("Error leyendo el archivo de subastas.");
 	        }
+		
+		//Carga los artistas
+		try {
+			String jsonArtistas = new String(Files.readAllBytes(Paths.get(ARTISTAS__FILE)));
+		    JSONArray jArtistas = new JSONArray(jsonArtistas);
+		    cargarArtistas(galeria, jArtistas);
+		}catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error leyendo el archivo de artistas.");
+        }
 		/*
 		for (Subasta sub: galeria.getSubastas()) {
 			System.out.println(sub.getPiezaSubastada().getId());
@@ -588,85 +668,3 @@ public class CentralPersistencia {
         
 	}
 }
-
-
-
-	
-	/*
-	public void cargarPiezasDesdeJSON(Galeria galeria) {
-        try {
-            String jsonData = new String(Files.readAllBytes(Paths.get(PIEZAS__FILE)));
-            JSONArray jPiezas = new JSONArray(jsonData);
-            for (int i = 0; i < jPiezas.length(); i++) {
-                JSONObject jPieza = jPiezas.getJSONObject(i);
-                agregarPiezaDesdeJSON(jPieza, galeria);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error leyendo el archivo de piezas.");
-        }
-    }
-
-    private void agregarPiezaDesdeJSON(JSONObject jPieza, Galeria galeria) throws IOException {
-        String tipo = jPieza.getString("tipo");
-        switch (tipo) {
-            case "Pintura":
-                galeria.agregarPintura(
-                    jPieza.getString("titulo"),
-                    jPieza.getString("autor"),
-                    jPieza.getString("ano"),
-                    jPieza.getString("lugarDeCreacion"),
-                    jPieza.getBoolean("exhibicion"),
-                    jPieza.getDouble("precio"),
-                    jPieza.getBoolean("valorFijo"),
-                    jPieza.getString("estado"),
-                    jPieza.getDouble("alto"),
-                    jPieza.getDouble("ancho"),
-                    jPieza.getString("tecnica"),
-                    jPieza.getString("lienzo"),
-                    jPieza.getString("estilo")
-                );
-                break;
-            case "Escultura":
-                galeria.agregarEscultura(
-                    jPieza.getString("titulo"),
-                    jPieza.getString("autor"),
-                    jPieza.getString("ano"),
-                    jPieza.getString("lugarDeCreacion"),
-                    jPieza.getBoolean("exhibicion"),
-                    jPieza.getDouble("precio"),
-                    jPieza.getBoolean("valorFijo"),
-                    jPieza.getString("estado"),
-                    jPieza.getDouble("alto"),
-                    jPieza.getDouble("ancho"),
-                    jPieza.getDouble("profundidad"),
-                    jPieza.getString("materiales"),
-                    jPieza.getDouble("peso"),
-                    jPieza.getBoolean("necesitaElectricidad"),
-                    jPieza.optString("detallesInstalacion", "")
-                );
-                break;
-            case "Fotografia":
-                galeria.agregarFotografia(
-                    jPieza.getString("titulo"),
-                    jPieza.getString("autor"),
-                    jPieza.getString("ano"),
-                    jPieza.getString("lugarDeCreacion"),
-                    jPieza.getBoolean("exhibicion"),
-                    jPieza.getDouble("precio"),
-                    jPieza.getBoolean("valorFijo"),
-                    jPieza.getString("estado"),
-                    jPieza.getDouble("alto"),
-                    jPieza.getDouble("ancho"),
-                    jPieza.getString("formato"),
-                    jPieza.getString("tecnica"),
-                    jPieza.getDouble("resolucion")
-                );
-                break;
-            default:
-                System.out.println("Tipo de pieza no reconocido: " + tipo);
-                break;
-        }
-    }
-}
-*/

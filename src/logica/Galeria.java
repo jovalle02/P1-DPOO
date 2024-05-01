@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 import exceptions.PiezaNoDisponibleException;
@@ -26,6 +27,7 @@ public class Galeria {
     private Map<String, Usuario> propietarios;
     private Map<String, Usuario> compradores;
     private Map<String, Factura> historialDeCompras;
+    private Map<String, Artista> artistas;
     private List<Verificacion> verificaciones;//Hace referencia a las solicitudes pendientes de compra.
     private List<Subasta> subastas;
     // Constructor
@@ -38,6 +40,7 @@ public class Galeria {
         historialDeCompras = new HashMap<String, Factura>();
         verificaciones = new ArrayList<Verificacion>();
         subastas = new ArrayList<Subasta>();
+        artistas = new HashMap<String, Artista>();
     }
     
     public Map<String, Pieza> getHistorial() {
@@ -232,5 +235,19 @@ public class Galeria {
 	public void setSubastas(List<Subasta> subastas) {
 		this.subastas = subastas;
 	}
+	public Artista getArtistaNombre(String nombre) {
+			return artistas.get(nombre);
+		}
+	public void agregarArtista(Artista artista) {
+		artistas.put(artista.getNombre(), artista);
+	}
+	public Set<String> getSetArtistas(){
+		return artistas.keySet();
+	}
+	
+	public Factura getFacturaID(String id) {
+		return historialDeCompras.get(id);
+	}
 }
+	
 
