@@ -80,6 +80,8 @@ public class Galeria {
         Pintura pintura = new Pintura(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo,estado, alto, ancho, tecnica, lienzo, estilo, true, false);
         inventario.put(pintura.getId(), pintura);
         historial.put(pintura.getId(), pintura);
+        Artista artista = asociarArtista(autor);
+        artista.agregarPiezaHecha(pintura);
     }
 
     public void agregarEscultura(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, double profundidad, String materiales, Double peso, boolean necesitaElectricidad, String detallesInstalacion) throws IOException {
@@ -88,12 +90,16 @@ public class Galeria {
         // Agregar la escultura a la galería
         inventario.put(escultura.getId(), escultura);
         historial.put(escultura.getId(), escultura);
+        Artista artista = asociarArtista(autor);
+        artista.agregarPiezaHecha(escultura);
     }
 
     public void agregarFotografia(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo, String estado, double alto, double ancho, String formato, String tecnica, double resolucion) throws IOException {
         Fotografia fotografia = new Fotografia(titulo, titulo, autor, anioCreacion, lugarCreacion, exhibicion, valor, valorfijo, estado, alto, ancho,formato, tecnica, resolucion, true, false);
         inventario.put(fotografia.getId(), fotografia);
         historial.put(fotografia.getId(), fotografia);
+        Artista artista = asociarArtista(autor);
+        artista.agregarPiezaHecha(fotografia);
     }
 
     public void agregarImpresion(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String tipoImpresion, String tamano, String calidad) throws IOException {
@@ -102,6 +108,8 @@ public class Galeria {
      // Agregar la impresion a la galería
         inventario.put(impresion.getId(), impresion);
         historial.put(impresion.getId(), impresion);
+        Artista artista = asociarArtista(autor);
+        artista.agregarPiezaHecha(impresion);
     }
 
     public void agregarVideo(String titulo, String autor, String anioCreacion, String lugarCreacion, boolean exhibicion, double valor, boolean valorfijo,String estado, double alto, double ancho, String formato, String duracion, String calidad) throws IOException {
@@ -110,6 +118,8 @@ public class Galeria {
         // Agregar el video a la galería
         inventario.put(video.getId(), video);
         historial.put(video.getId(), video);
+        Artista artista = asociarArtista(autor);
+        artista.agregarPiezaHecha(video);
     }
     
     public Pieza getPieza(String name) {
@@ -192,6 +202,10 @@ public class Galeria {
     		Factura factura = new Factura(medioPago,pieza.getValor(), comprador, facturaId, pieza.getId());
     		comprador.getCompras().add(factura);
     		historialDeCompras.put(factura.getComprador().getId(), factura);
+    		Artista artista = artistas.get(pieza.getAutor());
+    		if (artista!=null) {
+    			artista.agregarPiezaVendida(factura);
+    		}
     		propietarios.put(comprador.getId(), comprador);
     		compradores.put(comprador.getId(), comprador);
     		verificaciones.remove(verificacion);
@@ -201,7 +215,30 @@ public class Galeria {
     		verificaciones.remove(verificacion);
     	}
     }
-
+    
+    public void historiaArtista(String nombreArtista) {
+    	Artista artista = artistas.get(nombreArtista);
+    	if(artista!=null) {
+    		System.out.println("*** Piezas hechas por el artista: ***");
+    		System.out.println("");
+    		for (Pieza pieza: artista.getPiezasHechas().values()) {
+    			System.out.println("Nombre: "+ pieza.getTitulo());
+    			System.out.println("Año de creación: "+pieza.getAnioCreacion());
+    			System.out.println("");
+    		}
+    		System.out.println("*** Ventas del artista: ***");
+    		System.out.println("");
+    		
+    		for (Factura factura: artista.getPiezasVendidas().values()) {
+    			System.out.println("Obra vendida: "+ factura.getIdPieza());
+    			System.out.println("Precio de venta: "+factura.getValor());
+    			System.out.println("Fecha de venta: "+factura.getFecha());
+    			System.out.println("");
+    		}
+    	}else {
+    		System.out.println("No se encontró un artista con el nombre "+ nombreArtista);
+    	}
+    }
     
     public void iniciarSubasta(Pieza pieza, double valorInicial, double valorMinimo) {
         // Lógica para iniciar una subasta
@@ -245,9 +282,23 @@ public class Galeria {
 		return artistas.keySet();
 	}
 	
+	/*
+	 * Se usa cuando se añade una pieza. Primero busca un artista y lo devuelve en caso de encontrarlo.
+	 * De lo contrario, crea un nuevo artista.
+	 */
+	public Artista asociarArtista(String nombreArtista) {
+		Artista artista = getArtistaNombre(nombreArtista);
+		if (artista==null) {
+			artista = new Artista(nombreArtista);
+			artistas.put(nombreArtista, artista);
+		}
+		return artista;
+	}
+	
 	public Factura getFacturaID(String id) {
 		return historialDeCompras.get(id);
 	}
+	
 }
 	
 
