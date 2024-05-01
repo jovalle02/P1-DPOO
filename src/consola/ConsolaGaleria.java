@@ -51,7 +51,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza", "Ver Historial Artistas", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -96,6 +96,11 @@ public class ConsolaGaleria extends ConsolaBasica {
 				}
 				break;
 			case 7:
+				System.out.println("Ver Historial Artistas");
+				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
+				galeria.historiaArtista(nombreArtista);
+				break;
+			case 8:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();
@@ -108,7 +113,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuEmpleado() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" ,"Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" , "Ver Historial Artistas", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -127,6 +132,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 				System.out.println("Subastas");
 				menuSubastasEmpleado();
 			case 5:
+				System.out.println("Ver Historial Artistas");
+				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
+				galeria.historiaArtista(nombreArtista);
+				menuEmpleado();
+				break;
+			case 6:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();
@@ -153,7 +164,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 	private void menuUsuario() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Ver Historial Artistas", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -193,6 +204,12 @@ public class ConsolaGaleria extends ConsolaBasica {
 				menuSubastasUsuario();
 				break;
 			case 5:
+				System.out.println("Ver Historial Artistas");
+				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
+				galeria.historiaArtista(nombreArtista);
+				menuUsuario();
+				break;
+			case 6:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();
