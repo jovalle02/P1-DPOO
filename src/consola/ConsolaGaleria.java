@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
+import logica.Factura;
 import logica.Galeria;
 import logica.Subasta;
 import logica.Verificacion;
@@ -51,7 +52,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza", "Salir"});
+		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza", "Consultar historial de una pieza", "Salir"});
 
 		switch (opcion) {
 			case 1:
@@ -96,6 +97,14 @@ public class ConsolaGaleria extends ConsolaBasica {
 				}
 				break;
 			case 7:
+				System.out.println("Consultar historial de una pieza");
+				String nombrePieza = pedirCadenaAlUsuario("Ingrese el nombre de la pieza que desea consultar");
+				Factura historiaPieza = galeria.getCurrentOwner(nombrePieza);
+				this.imprimirDetallesPieza(historiaPieza.getIdPieza());
+				System.out.println("Dueño actual de la pieza: " + historiaPieza.getComprador().getNombre() + " " + historiaPieza.getComprador().getApellido());
+				System.out.println("Vendida por un valor de: " + historiaPieza.getValor());
+				break;
+			case 8:
 				System.out.println("Gracias por usar la Galería y Casa de Subastas");
 				autenticado = false;
 				galeria.salvarGaleria();

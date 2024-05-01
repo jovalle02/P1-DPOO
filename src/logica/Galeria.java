@@ -219,7 +219,7 @@ public class Galeria {
     	}
     }
 
-    public Usuario getCurrentOwner(String idPieza) {
+    public Factura getCurrentOwner(String idPieza) {
         Factura latestFactura = null;
         Date latestDate = null;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -242,8 +242,7 @@ public class Galeria {
 
         // If a latest transaction is found, return the owner
         if (latestFactura != null) {
-        	System.out.println(latestFactura.getComprador().getNombre());
-            return latestFactura.getComprador();
+            return latestFactura;
         }
 
         // If no transaction is found, return null
