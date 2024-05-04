@@ -1,0 +1,50 @@
+{
+  "Test1": {
+    "verificado": false,
+    "password": "test1",
+    "apellido": "Ovalle",
+    "historial": [],
+    "id": "b53193e0-f305-4749-84d6-96b7374684c2",
+    "login": "Test1",
+    "topeDeCompra": 2,
+    "nombre": "Jose ",
+    "piezas_actuales": [],
+    "email": "ja@ovalle.com",
+    "rol": "COMUN"
+  },
+  "jose": {
+    "verificado": true,
+    "password": "jose",
+    "apellido": "jose",
+    "historial": ["Noche Estrellada"],
+    "id": "0f4f8599-4924-411a-a463-4276f69854bc",
+    "login": "jose",
+    "topeDeCompra": 2000,
+    "nombre": "jose",
+    "piezas_actuales": ["Noche Estrellada"],
+    "email": "jose",
+    "rol": "COMUN"
+  },
+  "admin": {
+    "password": "admin",
+    "apellido": "Admin",
+    "id": "3647556c-cc83-46ec-80f1-5743b2bb72f4",
+    "login": "admin",
+    "nombre": "Admin",
+    "email": "admin@admin.com",
+    "rol": "ADMIN"
+  },
+  "joseeee": {
+    "verificado": true,
+    "password": "joseee",
+    "apellido": "joseee",
+    "historial": [],
+    "id": "0c4f9799-4924-411a-a463-4246f69854bc",
+    "login": "joseeee",
+    "topeDeCompra": 2000,
+    "nombre": "josemario",
+    "piezas_actuales": [],
+    "email": "josemario",
+    "rol": "COMUN"
+  }
+}

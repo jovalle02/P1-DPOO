@@ -620,16 +620,6 @@ public class CentralPersistencia {
 		    	cargarFacturas(galeria, jFacturas.getJSONObject(i));
 		    }
 			agregarFacturasUsuarios(galeria);
-			/*
-			for (Usuario us: galeria.getUsuarios().values()) {
-				if(us instanceof UsuarioComun) {
-					for(Factura fact :((UsuarioComun) us).getCompras()) {
-						System.out.println(fact.getId());
-						System.out.println(fact.getComprador().getId());
-					}
-				}
-			}
-			*/
 			} catch (IOException e) {
 	            e.printStackTrace();
 	            System.out.println("Error leyendo el archivo de facturas.");
@@ -655,16 +645,5 @@ public class CentralPersistencia {
             e.printStackTrace();
             System.out.println("Error leyendo el archivo de artistas.");
         }
-		/*
-		for (Subasta sub: galeria.getSubastas()) {
-			System.out.println(sub.getPiezaSubastada().getId());
-				for(Usuario us :sub.getOfertadores()) {
-					System.out.println(us.getId());
-					
-				}
-
-		}*/
-		
-        
 	}
 }
