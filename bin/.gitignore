@@ -1,3 +1,8 @@
+/auth/
+/consola/
+/exceptions/
 /logica/
 /persistencia/
 /piezas/
+/usuarios/
+/InventarioTest.class
