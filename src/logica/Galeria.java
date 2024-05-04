@@ -53,6 +53,11 @@ public class Galeria {
 	public void cargarGaleria() {
     	CentralPersistencia.cargarGaleria(this);
     }
+	
+	public void añadirUsuario(Usuario usuario) {
+		usuarios.put(usuario.getId(), usuario);
+	}
+
 	public void salvarGaleria () {
 		CentralPersistencia.salvarGaleria(this);
 	}
@@ -66,7 +71,11 @@ public class Galeria {
 		return usuarios;
 	}
     
-    public Usuario getUsuarioId(String id) {
+    public Map<String, Usuario> getCompradores() {
+		return compradores;
+	}
+
+	public Usuario getUsuarioId(String id) {
     	return usuarios.get(id);
     }
 
