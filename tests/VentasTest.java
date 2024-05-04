@@ -75,4 +75,11 @@ public class VentasTest {
         Map<String, Usuario> compradoresGaleria = galeriaPrueba.getCompradores();
         assertEquals( false, compradoresGaleria.isEmpty(), "La factura no fue añadida exitosamente al historial de compras de la galeria." );
     }
+	
+	@Test
+	void cambiarElTopeDeUnUsuario() {
+		//Cambiar el tope del usuario a un numero.
+		galeriaPrueba.manipularTopeDeCompra("Jose", 1000);
+		assertEquals( 1000, usuarioPrueba.getTopeDeCompra(), "Tope de compra no fue actualizado correctamente." );
+	}
 }
