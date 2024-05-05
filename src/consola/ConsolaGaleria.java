@@ -180,6 +180,53 @@ public class ConsolaGaleria extends ConsolaBasica {
 		menuAdministrador();
 	}
 
+	public void consultarUsuario(Galeria galeriaPrueba) {
+		
+		
+		Galeria galeria = galeriaPrueba;
+		
+		System.out.println("Consultar usuario");
+		String idABuscar = pedirCadenaAlUsuario("Ingrese el id del usuario que desea consultar");
+		
+		UsuarioComun usuario = (UsuarioComun) galeria.getUsuarioId(idABuscar);
+		Map<String, Factura> piezasHistoria = galeria.getHistorialDeCompras();
+		
+		System.out.println("+++++++++++++++++++++++++++++++++");
+        
+		System.out.println("Usuario: " + usuario.getNombre() + " " + usuario.getApellido() );
+		System.out.println("+++++++++++++++++++++++++++++++++");		            	
+        
+    	
+		
+		for (Entry<String, Factura> entry : piezasHistoria.entrySet()) {
+            String key = entry.getKey();
+            Factura value = entry.getValue(); 
+            if (value.getComprador().getId() == usuario.getId()) {
+            	System.out.println("Nombre de Pintura: " + value.getIdPieza() ); 
+            	System.out.println("Fecha de compra: " + value.getFecha());
+            	System.out.println("---");		            	
+            }
+            
+            
+        }
+		
+		List<Pieza> piezasUser = usuario.getPiezasActuales();
+		
+		System.out.println("[ Piezas en el inventario del usuario ]"); 
+		
+		double total = 0;
+		
+		for (Pieza entry : piezasUser) {
+			
+        	System.out.println("Nombre de Pintura:" + entry.getTitulo()  ); 
+        	System.out.println("Valor: " + entry.getValor() );
+        	System.out.println("---");		            	
+        	total += entry.getValor();
+		}
+		
+		System.out.println("Valor del inventario:" + total  ); 
+	}
+	
 	private void menuEmpleado() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" , "Consultar historial de una pieza",  "Ver Historial Artistas", "Salir"});
 

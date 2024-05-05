@@ -36,6 +36,10 @@ public class UsuarioComun extends Usuario {
 	public List<Factura> getCompras() {
 		return compras;
 	}
+	public void setCompras(List<Factura> facturas) {
+		this.compras = facturas;
+	}
+	
 	public boolean isVerificado() {
 		return verificado;
 	}

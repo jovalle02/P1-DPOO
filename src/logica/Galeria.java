@@ -49,6 +49,7 @@ public class Galeria {
     public Map<String, Pieza> getHistorial() {
 		return historial;
 	}
+    
 
 	public void cargarGaleria() {
     	CentralPersistencia.cargarGaleria(this);
@@ -339,6 +340,10 @@ public class Galeria {
 	
 	public Factura getFacturaID(String id) {
 		return historialDeCompras.get(id);
+	}
+
+	public void setHistorialDeCompras(Map<String, Factura> historialDeCompras) {
+		this.historialDeCompras = historialDeCompras;
 	}
 	
 }
