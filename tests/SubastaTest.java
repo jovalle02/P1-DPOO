@@ -30,9 +30,9 @@ public class SubastaTest {
         	    "Bruce",               // Nombre
         	    "Wayne",             // Apellido
         	    "bruce@wayne.com",    // Email
-        	    "imbatman",       // Contraseña
+        	    "imbatman",       // password
         	    "battyman",        // Nombre de usuario o login
-        	    Rol.COMUN,              // Rol del usuario (asumiendo que Rol es una enumeración con valores como COMUN, ADMIN, etc.)
+        	    Rol.COMUN,              // Rol del usuario
         	    new ArrayList<Pieza>(), // Historial de piezas
         	    new ArrayList<Pieza>(), // Piezas actuales en posesión
         	    new ArrayList<Factura>(), // Lista de compras realizadas (facturas)
