@@ -22,7 +22,7 @@ import persistencia.CentralPersistencia;
 import piezas.Pieza;
 import usuarios.Usuario;
 
-public class salvarGaleriaTest {
+public class PersistenciaGaleriaTest {
 	private static final String INVENTARIO__FILE = "datos_test/salvar/inventario.json";
 	private static final String HISTORIAL__FILE = "datos_test/salvar/historial.json";
 	private static final String USUARIOS__FILE = "datos_test/salvar/usuarios.json";
