@@ -60,8 +60,8 @@ public class ConsolaAuth extends ConsolaBasica {
     }
 
     private void iniciarSesion() {
-        String username = pedirCadenaAlUsuario("Ingrese su nombre de usuario:");
-        String password = pedirCadenaAlUsuario("Ingrese su contraseña:");
+        String username = pedirCadenaAlUsuario("Ingrese su nombre de usuario");
+        String password = pedirCadenaAlUsuario("Ingrese su contraseña");
 
         try {
             JSONObject users = cargar(USERS_FILE);

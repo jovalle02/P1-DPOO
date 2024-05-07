@@ -12,6 +12,15 @@
     "email": "ja@ovalle.com",
     "rol": "COMUN"
   },
+  "empleado": {
+    "password": "empleado",
+    "apellido": "Trabajoso",
+    "id": "0d4f9879-4324-421a-a463-4246f69854bc",
+    "login": "empleado",
+    "nombre": "Trabajador",
+    "email": "trabajador@email.com",
+    "rol": "EMPLEADO"
+  },
   "jose": {
     "verificado": true,
     "password": "jose",

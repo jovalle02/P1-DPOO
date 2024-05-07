@@ -181,7 +181,7 @@ public class CentralPersistencia {
 	        jVerificacion.put("pieza", idPieza);
 	        jVerificaciones.put(jVerificacion);
 	    }
-	    System.out.println(jVerificaciones.toString());
+	    //System.out.println(jVerificaciones.toString());
 	    try (FileWriter file = new FileWriter(archivo)) {
 	        file.write(jVerificaciones.toString(2));
 	    } catch (IOException e) {
