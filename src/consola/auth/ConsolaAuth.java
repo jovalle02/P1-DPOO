@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import auth.Rol;
@@ -104,6 +105,7 @@ public class ConsolaAuth extends ConsolaBasica {
                 System.out.println("El usuario ya existe.");
             } else {
                 JSONObject user = new JSONObject();
+                user.put("login", username);
                 user.put("password", password);
                 user.put("nombre", nombre);
                 user.put("apellido", apellido);
@@ -113,6 +115,10 @@ public class ConsolaAuth extends ConsolaBasica {
                 user.put("verificado", false);
                 user.put("rol", Rol.COMUN.name());
                 user.put("id", UUID.randomUUID().toString());
+                JSONArray historialArray = new JSONArray();
+                user.put("historial", historialArray);
+                JSONArray piezasArray = new JSONArray();
+                user.put("piezas_actuales", piezasArray);
                 users.put(username, user);
                 try (FileWriter file = new FileWriter(USERS_FILE)) {
                     file.write(users.toString());

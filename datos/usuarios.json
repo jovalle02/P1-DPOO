@@ -34,6 +34,19 @@
     "email": "admin@admin.com",
     "rol": "ADMIN"
   },
+  "pperez": {
+    "verificado": false,
+    "password": "pperez",
+    "apellido": "Perez",
+    "historial": [],
+    "id": "c47b13f5-05ce-45ea-8a71-c8210dcd2145",
+    "login": "pperez",
+    "topeDeCompra": 2000000,
+    "nombre": "Pedro",
+    "piezas_actuales": [],
+    "email": "pperez@soho.com",
+    "rol": "COMUN"
+  },
   "joseeee": {
     "verificado": true,
     "password": "joseee",
