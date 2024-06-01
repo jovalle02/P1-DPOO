@@ -12,6 +12,7 @@ import logica.Factura;
 import logica.Galeria;
 import logica.Subasta;
 import logica.Verificacion;
+import pasarela_pagos.TiposPasarela;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -89,7 +90,30 @@ public class ConsolaGaleria extends ConsolaBasica {
 				if (verificacion != null) {
 					boolean ofertar = pedirConfirmacionAlUsuario("¿Desea confirmar esta verificacion?");
 					if (ofertar) {
-						String metodo = pedirCadenaAlUsuario("Cual es el metodo de pago?");
+						String metodo = pedirCadenaAlUsuario("¿Cuál es el metodo de pago? (Tarjeta o efectivo)");
+						if(metodo.equalsIgnoreCase("tarjeta")){
+							System.out.println("Seleccione la pasarela de pago:");
+							int k=0;
+							for(TiposPasarela pasarela : TiposPasarela.values()) {
+								k+=1;
+								System.out.println(""+k+". "+pasarela);
+							}
+							String pasaString = pedirCadenaAlUsuario("Escriba el nombre");
+							try {
+								TiposPasarela pasa = TiposPasarela.fromString(pasaString);
+								String idTarjeta = pedirCadenaAlUsuario("Ingrese el número de la tarjeta: ");
+								Usuario usuarioVerificacion = verificacion.getUsuario();
+								boolean approved = galeria.pagoPasarela(pasa, usuarioVerificacion.getNombre(), usuarioVerificacion.getApellido(), usuarioVerificacion.getEmail(), idTarjeta, verificacion.getPieza().getValor());
+								if(!approved) {
+									System.out.println("No se pudo completar la transacción.");
+									break;
+								}
+							}catch (Exception e) {
+								e.printStackTrace();
+								break;
+							}
+							
+						}
 						galeria.confirmarVenta(verificacion, ofertar, metodo);
 						System.out.println("Verificacion confirmada exitosamente.");
 					} else {

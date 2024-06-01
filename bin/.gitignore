@@ -1,1 +1,10 @@
 /consola/
+/auth/
+/exceptions/
+/logica/
+/persistencia/
+/persistenciaTest/
+/piezas/
+/usuarios/
+/pasarelaPagos/
+/pasarela_pagos/

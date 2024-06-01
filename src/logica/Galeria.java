@@ -12,6 +12,8 @@ import java.util.Set;
 import java.util.UUID;
 
 import exceptions.PiezaNoDisponibleException;
+import pasarela_pagos.PasarelaPagos;
+import pasarela_pagos.TiposPasarela;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -344,6 +346,28 @@ public class Galeria {
 
 	public void setHistorialDeCompras(Map<String, Factura> historialDeCompras) {
 		this.historialDeCompras = historialDeCompras;
+	}
+	
+	//Función encargada de hacer pagos por pasarelas de pagos de tarjeta de crédito
+	//Retorna true si pudo ser efectuada correctamente, false si hubo un problema durante la transacción.
+	public static boolean pagoPasarela(TiposPasarela pasarela, String firstName, String lastName, String email, String idTarjeta, double monto) {
+		try {
+			Class clase = Class.forName("pasarela_pagos."+pasarela.toString());
+			PasarelaPagos pasarelaPago = (PasarelaPagos)clase.getDeclaredConstructor(null).newInstance(null);
+			boolean approved = pasarelaPago.realizarPago(firstName, lastName, email, idTarjeta, monto);
+			return approved;
+		} catch (ClassNotFoundException e) {
+			System.out.println("No existe el método de pago "+pasarela);
+			e.printStackTrace();
+			return false;
+		}
+		catch (Exception e) {
+			System.out.println("Ocurrió un error durante el pago con tarjeta");
+			e.printStackTrace();
+			return false;
+		}
+		
+		
 	}
 	
 }
