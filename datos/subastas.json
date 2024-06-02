@@ -1,1 +1,10 @@
-[]
+[{
+  "mayorOfrecido": 100,
+  "piezaSubastada": "Mona Lisa",
+  "ofertadores": ["0f4f8599-4924-411a-a463-4276f69854bc"],
+  "valorInicial": 10,
+  "id": "133c37bd-d6cc-4d8e-8ef0-476ffa34f87b",
+  "valorMinimo": 10,
+  "operador": "0d4f9879-4324-421a-a463-4246f69854bc",
+  "clienteMaximoOfrecido": "0f4f8599-4924-411a-a463-4276f69854bc"
+}]

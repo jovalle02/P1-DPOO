@@ -5,7 +5,7 @@
     "nombre": "Bad Bunny"
   },
   {
-    "piezas_vendidas": [],
+    "piezas_vendidas": ["11628df0-b5a2-481f-b6a5-c6504e4e0d35"],
     "piezas_hechas": ["Mona Lisa"],
     "nombre": "DaVincci"
   }

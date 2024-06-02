@@ -12,12 +12,12 @@
     "titulo": "Mona Lisa",
     "alto": 1,
     "autor": "DaVincci",
-    "vendida": false,
+    "vendida": true,
     "ancho": 1,
     "tecnica": "oleo",
     "lienzo": "good",
     "id": "Mona Lisa",
-    "disponible": true
+    "disponible": false
   },
   {
     "descripcion": "Perfecto",
