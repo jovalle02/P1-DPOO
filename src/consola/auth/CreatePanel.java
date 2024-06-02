@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -96,7 +97,7 @@ public class CreatePanel extends JPanel{
         formPanel.add(birthDateField, gbc);
 
         JButton createButton = new JButton("Crear Usuario");
-        createButton.addActionListener(e -> createUser());
+        createButton.addActionListener(e -> createUser(backListener));
 
         JButton backButton = new JButton("Volver");
         backButton.addActionListener(backListener);
@@ -109,7 +110,7 @@ public class CreatePanel extends JPanel{
         add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    private void createUser() {
+    private void createUser(ActionListener backListener) {
         // Obtener los valores ingresados por el usuario
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -118,5 +119,20 @@ public class CreatePanel extends JPanel{
         String email = emailField.getText();
         double maxPurchase = Double.parseDouble(maxPurchaseField.getText());
         String birthDate = birthDateField.getText();
+        UsuariosJson user = UsuariosJson.getInstance();
+        boolean result = user.create(username, password, firstName, lastName, email, null, birthDate);
+        if (result) {
+            JOptionPane.showMessageDialog(this, "Usuario creado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            backListener.actionPerformed(null); // Simular clic en el botón "Volver"
+        } else {
+            JOptionPane.showMessageDialog(this, "Error al crear el usuario", "Error", JOptionPane.ERROR_MESSAGE);
+            usernameField.setText("");
+            passwordField.setText("");
+            firstNameField.setText("");
+            lastNameField.setText("");
+            emailField.setText("");
+            maxPurchaseField.setText("");
+            birthDateField.setText("");
+        }
     }
 }

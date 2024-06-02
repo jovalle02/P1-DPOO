@@ -20,8 +20,10 @@ public class UsuariosJson {
 	private static UsuariosJson instance;
 	private static final String USERS_FILE = "datos/usuarios.json";
 	private JSONObject users;
+	private Usuario usuario;
 	
 	private UsuariosJson() {
+		usuario = null;
 		try {
             users = cargar(USERS_FILE);
         } catch (Exception e) {
@@ -46,8 +48,7 @@ public class UsuariosJson {
 		return instance;
 	}
 	
-	public Usuario login(String username, String password) {
-		Usuario usuario = null;
+	public void login(String username, String password) {
             if (users.has(username)) {
                 JSONObject user = users.getJSONObject(username);
                 if (user.getString("password").equals(password)) {
@@ -61,9 +62,12 @@ public class UsuariosJson {
                     }
                 } 
             } 
-		return usuario;
 	}
 	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
 	public boolean create(String username, String password, String nombre, String apellido, String email, Double topeDeCompra, String fechaNacimiento) {
 		boolean result = true;
             if (users.has(username)) {

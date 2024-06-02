@@ -1,5 +1,6 @@
 package consola;
 
+import java.awt.EventQueue;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +9,13 @@ import java.util.UUID;
 
 import auth.Rol;
 import consola.auth.ConsolaAuth;
+import interfaz.usuario.GUIAdmin;
+import interfaz.usuario.GUIEmpleado;
+import interfaz.usuario.GUIUsuario;
 import logica.Factura;
 import logica.Galeria;
 import logica.Subasta;
 import logica.Verificacion;
-import pasarela_pagos.TiposPasarela;
 import persistencia.CentralPersistencia;
 import piezas.Escultura;
 import piezas.Fotografia;
@@ -55,153 +58,20 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 
 	private void menuAdministrador() throws Exception {
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (ADMIN)", new String[]{"Añadir una Pieza", "Eliminar una Pieza", "Vender una pieza", "Consultar inventario de la galeria", "Modificar tope de compra de un usuario", "Verificar compra de una Pieza","Consultar historial de una pieza", "Ver Historial Artistas","Consultar Lista Clientes","Consultar Historia Cliente","Salir"});
+		
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                	GUIAdmin frame = new GUIAdmin(galeria, usuario);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+		
 
-		switch (opcion) {
-			case 1:
-				System.out.println("Añadir una Pieza");
-				agregarPieza();
-				System.out.println("La pieza se ha añadido exitosamente!");
-				break;
-			case 2:
-				System.out.println("Eliminar una Pieza");
-				String name = pedirCadenaAlUsuario("Ingrese el nombre de la pieza:");
-				Pieza pieza = galeria.getPieza(name);
-				galeria.eliminarPieza(pieza);
-				System.out.println("La pieza se ha eliminado exitosamente!");
-				break;
-			case 3:
-				System.out.println("Vender una pieza");
-				galeria.consultarInventario();
-				break;
-			case 4:
-				System.out.println("Consultar inventario de la galeria");
-				galeria.consultarInventario();
-				break;
-			case 5:
-				System.out.println("Modificar el tope de un usuario");
-				String id = pedirCadenaAlUsuario("Cual es el id del usuario?");
-				double nuevoTope = pedirNumeroAlUsuario("Ingrese el nuevo tope");
-				galeria.manipularTopeDeCompra(id, nuevoTope);
-				break;
-			case 6:
-				System.out.println("Verificar compra de una Pieza");
-				Verificacion verificacion = imprimirVerificaciones();
-				if (verificacion != null) {
-					boolean ofertar = pedirConfirmacionAlUsuario("¿Desea confirmar esta verificacion?");
-					if (ofertar) {
-						String metodo = pedirCadenaAlUsuario("¿Cuál es el metodo de pago? (Tarjeta o efectivo)");
-						if(metodo.equalsIgnoreCase("tarjeta")){
-							System.out.println("Seleccione la pasarela de pago:");
-							int k=0;
-							for(TiposPasarela pasarela : TiposPasarela.values()) {
-								k+=1;
-								System.out.println(""+k+". "+pasarela);
-							}
-							String pasaString = pedirCadenaAlUsuario("Escriba el nombre");
-							try {
-								TiposPasarela pasa = TiposPasarela.fromString(pasaString);
-								String idTarjeta = pedirCadenaAlUsuario("Ingrese el número de la tarjeta: ");
-								Usuario usuarioVerificacion = verificacion.getUsuario();
-								boolean approved = galeria.pagoPasarela(pasa, usuarioVerificacion.getNombre(), usuarioVerificacion.getApellido(), usuarioVerificacion.getEmail(), idTarjeta, verificacion.getPieza().getValor());
-								if(!approved) {
-									System.out.println("No se pudo completar la transacción.");
-									break;
-								}
-							}catch (Exception e) {
-								e.printStackTrace();
-								break;
-							}
-							
-						}
-						galeria.confirmarVenta(verificacion, ofertar, metodo);
-						System.out.println("Verificacion confirmada exitosamente.");
-					} else {
-						galeria.confirmarVenta(verificacion, ofertar, null);
-						System.out.println("Verificacion rechazada exitosamente.");
-					}
-				}
-				break;
-			case 7:
-				System.out.println("Consultar historial de una pieza");
-				String nombrePieza = pedirCadenaAlUsuario("Ingrese el nombre de la pieza que desea consultar");
-				Factura historiaPieza = galeria.getCurrentOwner(nombrePieza);
-				this.imprimirDetallesPieza(historiaPieza.getIdPieza());
-				System.out.println("Dueño actual de la pieza: " + historiaPieza.getComprador().getNombre() + " " + historiaPieza.getComprador().getApellido());
-				System.out.println("Vendida por un valor de: " + historiaPieza.getValor());
-				break;
-			case 8:
-				System.out.println("Ver Historial Artistas");
-				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
-				galeria.historiaArtista(nombreArtista);
-				break;
-			case 9:
-				System.out.println("Consultar todos los usuarios existentes");
-				Map<String, Usuario> usuarios = galeria.getUsuarios();
-				
-				for (Map.Entry<String, Usuario> entry : usuarios.entrySet()) {
-		            String key = entry.getKey();
-		            Usuario value = entry.getValue(); 
-
-		            System.out.println("Nombre de Usuario: " + value.getNombre()); 
-		            System.out.println("(ID) Buscar como: " + key);
-		            System.out.println("-----------------------------------");
-		        }
-				
-				break;
-			case 10:
-				System.out.println("Consultar usuario");
-				String idABuscar = pedirCadenaAlUsuario("Ingrese el id del usuario que desea consultar");
-				
-				UsuarioComun usuario = (UsuarioComun) galeria.getUsuarioId(idABuscar);
-				Map<String, Factura> piezasHistoria = galeria.getHistorialDeCompras();
-				
-				System.out.println("+++++++++++++++++++++++++++++++++");
-	            
-				System.out.println("Usuario: " + usuario.getNombre() + " " + usuario.getApellido() );
-				System.out.println("+++++++++++++++++++++++++++++++++");		            	
-	            
-            	
-				
-				for (Entry<String, Factura> entry : piezasHistoria.entrySet()) {
-		            String key = entry.getKey();
-		            Factura value = entry.getValue(); 
-		            if (value.getComprador().getId() == usuario.getId()) {
-		            	System.out.println("Nombre de Pintura: " + value.getIdPieza() ); 
-		            	System.out.println("Fecha de compra: " + value.getFecha());
-		            	System.out.println("---");		            	
-		            }
-		            
-		            
-		        }
-				
-				List<Pieza> piezasUser = usuario.getPiezasActuales();
-				
-				System.out.println("[ Piezas en el inventario del usuario ]"); 
-				
-				double total = 0;
-				
-				for (Pieza entry : piezasUser) {
-					
-	            	System.out.println("Nombre de Pintura:" + entry.getTitulo()  ); 
-	            	System.out.println("Valor: " + entry.getValor() );
-	            	System.out.println("---");		            	
-	            	total += entry.getValor();
-				}
-				
-				System.out.println("Valor del inventario:" + total  ); 
-				
-				break;
-			case 11:
-				System.out.println("Gracias por usar la Galería y Casa de Subastas");
-				autenticado = false;
-				galeria.salvarGaleria();
-				correrAplicacion();
-				break;
-			default:
-				System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-		}
-		menuAdministrador();
 	}
 
 	public void consultarUsuario(Galeria galeriaPrueba) {
@@ -252,6 +122,18 @@ public class ConsolaGaleria extends ConsolaBasica {
 	}
 	
 	private void menuEmpleado() throws Exception {
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                	GUIEmpleado frame = new GUIEmpleado(galeria, usuario);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+		
 		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" , "Consultar historial de una pieza",  "Ver Historial Artistas", "Salir"});
 
 		switch (opcion) {
@@ -311,6 +193,20 @@ public class ConsolaGaleria extends ConsolaBasica {
 
 
 	private void menuUsuario() throws Exception {
+		GUIUsuario interfaz = new GUIUsuario(galeria, usuario);
+		
+        EventQueue.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    GUIUsuario frame = new GUIUsuario(galeria, usuario);
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+		
 		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Ver Historial Artistas", "Consultar historial de una pieza", "Salir"});
 
 		switch (opcion) {
@@ -375,7 +271,7 @@ public class ConsolaGaleria extends ConsolaBasica {
 		}
 
 	}
-
+	
 	private void menuSubastasEmpleado() throws Exception {
 		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Consultar subastas", "Consultar subasta", "Finalizar subasta","Crear Subasta","Menu Principal"});
 		List<Subasta> subastas = this.galeria.getSubastas();

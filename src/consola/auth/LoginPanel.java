@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
@@ -62,8 +63,17 @@ public class LoginPanel extends JPanel{
 	private void authenticateUser() {
 		String username = usernameField.getText();
         String password = passwordField.getText();
-	    boolean authenticated = Math.random() > 0.5; // Simula éxito o fracaso aleatorio
-	    SwingUtilities.getWindowAncestor(this).dispose(); // Cierra el JFrame contenedor
+	    UsuariosJson user = UsuariosJson.getInstance();
+	    user.login(username, password);
+	    if (user.getUsuario() == null) {
+            JOptionPane.showMessageDialog(this, "Username o password incorrectos", "Error de autenticación", JOptionPane.ERROR_MESSAGE);
+            usernameField.setText("");
+            passwordField.setText("");
+        } else {
+            JOptionPane.showMessageDialog(this, "Autenticación exitosa", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            SwingUtilities.getWindowAncestor(this).dispose(); // Cierra el JFrame contenedor
+        }
+	    
 	}
 
 }

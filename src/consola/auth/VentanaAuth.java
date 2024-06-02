@@ -35,6 +35,8 @@ public class VentanaAuth extends JFrame{
 
         add(mainPanel);
         cardLayout.show(mainPanel, "OpcionesPanel");
+        setVisible(true);
+        
 	}
 
 }

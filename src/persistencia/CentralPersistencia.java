@@ -211,6 +211,7 @@ public class CentralPersistencia {
 
 	public static void salvarSubastas(Galeria galeria, String archivo) {
 	    List<Subasta> listaSubastas = galeria.getSubastas();
+	    
 	    JSONArray jSubastas = new JSONArray();
 	    for (Subasta subasta : listaSubastas) {
 	        JSONObject jSubasta = new JSONObject();
@@ -285,6 +286,9 @@ public class CentralPersistencia {
 		salvarSubastas(galeria, SUBASTAS__FILE);
 		//Salvar artistas
 		salvarArtistas(galeria, ARTISTAS__FILE);
+		//Salvar facturas	
+		List<Factura> facturas = new ArrayList<>(galeria.getHistorialDeCompras().values());
+		salvarFacturas(facturas, FACTURAS__FILE);
 	}
 	
 	public static void cargarVerificaciones (Galeria galeria, JSONArray arrayVerificaciones) {

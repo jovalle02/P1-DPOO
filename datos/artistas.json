@@ -1,15 +1,12 @@
 [
   {
+    "piezas_vendidas": ["be158976-6fb7-408d-a40c-28c905fc12b3"],
+    "piezas_hechas": ["Miami"],
+    "nombre": "Bad Bunny"
+  },
+  {
     "piezas_vendidas": [],
     "piezas_hechas": ["Mona Lisa"],
     "nombre": "DaVincci"
-  },
-  {
-    "piezas_vendidas": [
-      "84933",
-      "79247"
-    ],
-    "piezas_hechas": ["Noche Estrellada"],
-    "nombre": "Van Gogh"
   }
 ]
