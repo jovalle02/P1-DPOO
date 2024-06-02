@@ -1,18 +1,15 @@
 package interfaz.usuario;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -22,11 +19,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import consola.ConsolaGaleria;
+import exceptions.PiezaNoDisponibleException;
 import logica.Factura;
 import logica.Galeria;
+import logica.Subasta;
 import logica.Verificacion;
-import pasarela_pagos.TiposPasarela;
 import piezas.Escultura;
 import piezas.Fotografia;
 import piezas.Impresion;
@@ -54,6 +51,208 @@ public class GUIEmpleado extends JFrame {
         menuAdministrador();
     }
 
+    private void subastas() {
+        JDialog dialog = new JDialog(this, "Subastas", true);
+        dialog.setSize(600, 400);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(5, 1));
+
+        JButton btnConsultarSubastas = new JButton("Consultar Subastas");
+        JButton btnConsultarSubasta = new JButton("Consultar Subasta");
+        JButton btnFinalizarSubasta = new JButton("Finalizar Subasta");
+        JButton btnCrearSubasta = new JButton("Crear Subasta");
+        JButton btnVolver = new JButton("Volver");
+
+        btnConsultarSubastas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarSubastas();
+            }
+        });
+
+        btnConsultarSubasta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarSubasta();
+            }
+        });
+
+        btnFinalizarSubasta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+					finalizarSubasta();
+				} catch (PiezaNoDisponibleException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+        });
+
+        btnCrearSubasta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                crearSubasta();
+            }
+        });
+
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+
+        panel.add(btnConsultarSubastas);
+        panel.add(btnConsultarSubasta);
+        panel.add(btnFinalizarSubasta);
+        panel.add(btnCrearSubasta);
+        panel.add(btnVolver);
+
+        dialog.add(panel);
+        dialog.setVisible(true);
+    }
+
+    private void consultarSubastas() {
+        List<Subasta> subastas = galeria.getSubastas();
+        if (subastas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay subastas disponibles.", "Subastas", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < subastas.size(); i++) {
+            Subasta s = subastas.get(i);
+            Pieza p = s.getPiezaSubastada();
+            sb.append("Numero de subasta: ").append(i + 1).append("\n");
+            sb.append("Título: ").append(p.getTitulo()).append("\n");
+            sb.append("Estado subasta: ").append(s.isActiva() ? "Activa" : "Terminada").append("\n");
+            sb.append("Valor minimo para ofertar: ").append(s.getMayorOfrecido()).append("\n\n");
+        }
+
+        JOptionPane.showMessageDialog(this, sb.toString(), "Subastas", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void consultarSubasta() {
+        String idSubasta = JOptionPane.showInputDialog(this, "Ingrese el numero de la subasta:");
+        if (idSubasta == null || idSubasta.isEmpty()) {
+            return;
+        }
+
+        int subastaIndex;
+        try {
+            subastaIndex = Integer.parseInt(idSubasta) - 1;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Número de subasta inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        List<Subasta> subastas = galeria.getSubastas();
+        if (subastaIndex < 0 || subastaIndex >= subastas.size()) {
+            JOptionPane.showMessageDialog(this, "Número de subasta no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Subasta s = subastas.get(subastaIndex);
+        Pieza p = s.getPiezaSubastada();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Numero de subasta: ").append(subastaIndex + 1).append("\n");
+        sb.append("Título: ").append(p.getTitulo()).append("\n");
+        sb.append("Estado subasta: ").append(s.isActiva() ? "Activa" : "Terminada").append("\n");
+        sb.append("Valor minimo para ofertar: ").append(s.getMayorOfrecido()).append("\n");
+        sb.append("Valor minimo para poder finalizar la subasta: ").append(s.getValorMinimo()).append("\n");
+        sb.append("Historial de Usuarios que han ofertado:\n");
+
+        List<Usuario> ofertadores = s.getOfertadores();
+        for (Usuario ofertador : ofertadores) {
+            sb.append(ofertador.getNombre()).append(" ").append(ofertador.getApellido()).append("\n");
+        }
+
+        JOptionPane.showMessageDialog(this, sb.toString(), "Detalles de la Subasta", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void finalizarSubasta() throws Exception {
+        String idSubasta = JOptionPane.showInputDialog(this, "Ingrese el numero de la subasta:");
+        if (idSubasta == null || idSubasta.isEmpty()) {
+            return;
+        }
+
+        int subastaIndex;
+        try {
+            subastaIndex = Integer.parseInt(idSubasta) - 1;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Número de subasta inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        List<Subasta> subastas = galeria.getSubastas();
+        if (subastaIndex < 0 || subastaIndex >= subastas.size()) {
+            JOptionPane.showMessageDialog(this, "Número de subasta no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Subasta subasta = subastas.get(subastaIndex);
+        if (!subasta.isActiva()) {
+            JOptionPane.showMessageDialog(this, "La subasta ya ha sido finalizada.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Pieza piezaSubastada = subasta.getPiezaSubastada();
+        galeria.realizarCompra((UsuarioComun) subasta.getClienteMaximoOfrecido(), piezaSubastada);
+        List<Verificacion> verificaciones = galeria.getVerificaciones();
+        galeria.confirmarVenta(verificaciones.get(verificaciones.size() - 1), true, "tarjeta");
+        subasta.finalizarSubasta();
+        JOptionPane.showMessageDialog(this, "Subasta finalizada exitosamente.", "Subasta", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void crearSubasta() {
+        JTextField valorMinimoField = new JTextField();
+        JTextField valorInicialField = new JTextField();
+        JTextField idPiezaField = new JTextField();
+
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        panel.add(new JLabel("Valor mínimo de la subasta:"));
+        panel.add(valorMinimoField);
+        panel.add(new JLabel("Valor inicial de la subasta:"));
+        panel.add(valorInicialField);
+        panel.add(new JLabel("ID de la pieza a subastar:"));
+        panel.add(idPiezaField);
+
+        int result = JOptionPane.showConfirmDialog(null, panel, "Crear Subasta", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            float valorMinimo;
+            float valorInicial;
+            String idPieza = idPiezaField.getText();
+
+            try {
+                valorMinimo = Float.parseFloat(valorMinimoField.getText());
+                valorInicial = Float.parseFloat(valorInicialField.getText());
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Valores inválidos.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Pieza pieza = galeria.getPieza(idPieza);
+            if (pieza == null) {
+                JOptionPane.showMessageDialog(this, "Pieza no encontrada.", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Subasta nuevaSubasta = new Subasta(valorMinimo, valorInicial, usuario, pieza, UUID.randomUUID().toString());
+            nuevaSubasta.setClienteMaximoOfrecido(usuario);
+            nuevaSubasta.setActiva(true);
+            galeria.getSubastas().add(nuevaSubasta);
+
+            JOptionPane.showMessageDialog(this, "Subasta creada exitosamente.", "Subasta", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+
+    
     private void menuAdministrador() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(11, 1));
@@ -71,12 +270,7 @@ public class GUIEmpleado extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 subastas();
             }
-
-			private void subastas() {
-				// TODO Auto-generated method stub
-				
-			}
-        });
+            });
         
         btnConsultarInventario.addActionListener(new ActionListener() {
             @Override

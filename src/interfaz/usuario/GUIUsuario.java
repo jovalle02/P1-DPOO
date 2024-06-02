@@ -1,10 +1,10 @@
 package interfaz.usuario;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.DefaultListModel;
@@ -16,10 +16,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import consola.ConsolaGaleria;
 import exceptions.PiezaNoDisponibleException;
 import logica.Factura;
 import logica.Galeria;
+import logica.Subasta;
 import piezas.Escultura;
 import piezas.Fotografia;
 import piezas.Impresion;
@@ -223,8 +223,107 @@ public class GUIUsuario extends JFrame {
     }
 
     private void subastas() {
-        // Implementation for auctions
-        JOptionPane.showMessageDialog(this, "Subastas");
+        JDialog dialog = new JDialog(this, "Subastas", true);
+        dialog.setSize(600, 400);
+        dialog.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridLayout(4, 1));
+
+        JButton btnConsultarSubastas = new JButton("Consultar Subastas");
+        JButton btnRealizarOfertaSubasta = new JButton("Realizar Oferta en Subasta");
+        JButton btnVolver = new JButton("Volver");
+
+        btnConsultarSubastas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                consultarSubastas();
+            }
+        });
+
+        btnRealizarOfertaSubasta.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                realizarOfertaSubasta();
+            }
+        });
+
+        btnVolver.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+
+        panel.add(btnConsultarSubastas);
+        panel.add(btnRealizarOfertaSubasta);
+        panel.add(btnVolver);
+
+        dialog.add(panel);
+        dialog.setVisible(true);
+    }
+
+    private void consultarSubastas() {
+        List<Subasta> subastas = galeria.getSubastas();
+        if (subastas.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay subastas disponibles.", "Subastas", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < subastas.size(); i++) {
+            Subasta s = subastas.get(i);
+            Pieza p = s.getPiezaSubastada();
+            sb.append("Número de subasta: ").append(i + 1).append("\n");
+            sb.append("Título: ").append(p.getTitulo()).append("\n");
+            sb.append("Estado subasta: ").append(s.isActiva() ? "Activa" : "Terminada").append("\n");
+            sb.append("Valor mínimo para ofertar: ").append(s.getMayorOfrecido()).append("\n\n");
+        }
+
+        JOptionPane.showMessageDialog(this, sb.toString(), "Subastas", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void realizarOfertaSubasta() {
+        String idSubasta = JOptionPane.showInputDialog(this, "Ingrese el número de la subasta:");
+        if (idSubasta == null || idSubasta.isEmpty()) {
+            return;
+        }
+
+        int subastaIndex;
+        try {
+            subastaIndex = Integer.parseInt(idSubasta) - 1;
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Número de subasta inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        List<Subasta> subastas = galeria.getSubastas();
+        if (subastaIndex < 0 || subastaIndex >= subastas.size()) {
+            JOptionPane.showMessageDialog(this, "Número de subasta no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Subasta s = subastas.get(subastaIndex);
+        String valorOfertaStr = JOptionPane.showInputDialog(this, "Ingrese el valor de la oferta:");
+        if (valorOfertaStr == null || valorOfertaStr.isEmpty()) {
+            return;
+        }
+
+        float valorOferta;
+        try {
+            valorOferta = Float.parseFloat(valorOfertaStr);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Valor de oferta inválido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            s.subastar((UsuarioComun) this.usuario, valorOferta);
+            JOptionPane.showMessageDialog(this, "Oferta realizada exitosamente.", "Subasta", JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al realizar la oferta.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void verHistorialArtistas() {
