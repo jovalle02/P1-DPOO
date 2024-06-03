@@ -1,11 +1,11 @@
 package interfaz.usuario;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +22,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import consola.ConsolaGaleria;
 import logica.Factura;
 import logica.Galeria;
 import logica.Verificacion;
@@ -37,7 +36,7 @@ import usuarios.Usuario;
 import usuarios.UsuarioComun;
 
 public class GUIAdmin extends JFrame {
-    private Galeria galeria;
+	private Galeria galeria;
     private Usuario usuario;
 
     public GUIAdmin(Galeria galeria, Usuario usuario) {
@@ -56,7 +55,7 @@ public class GUIAdmin extends JFrame {
 
     private void menuAdministrador() {
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(11, 1));
+        panel.setLayout(new GridLayout(12, 1));
 
         JButton btnAddPieza = new JButton("Añadir una Pieza");
         JButton btnRemovePieza = new JButton("Eliminar una Pieza");
@@ -69,6 +68,7 @@ public class GUIAdmin extends JFrame {
         JButton btnConsultarClientes = new JButton("Consultar Lista Clientes");
         JButton btnConsultarHistorialCliente = new JButton("Consultar Historia Cliente");
         JButton btnSalir = new JButton("Salir");
+        JButton btnVisualizarVentas = new JButton("Visualizar Ventas");
 
         btnAddPieza.addActionListener(new ActionListener() {
             @Override
@@ -115,7 +115,7 @@ public class GUIAdmin extends JFrame {
         btnConsultarHistorialPieza.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	consultarHistorialPiezaOpcion();
+                consultarHistorialPiezaOpcion();
             }
         });
 
@@ -147,19 +147,47 @@ public class GUIAdmin extends JFrame {
             }
         });
 
-        panel.add(btnAddPieza); //
-        panel.add(btnRemovePieza); //
+        btnVisualizarVentas.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    visualizarVentas();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        panel.add(btnAddPieza);
+        panel.add(btnRemovePieza);
         panel.add(btnSellPieza);
-        panel.add(btnConsultarInventario); //
-        panel.add(btnModificarTope); //
-        panel.add(btnVerificarCompra); //
-        panel.add(btnConsultarHistorialPieza); //
+        panel.add(btnConsultarInventario);
+        panel.add(btnModificarTope);
+        panel.add(btnVerificarCompra);
+        panel.add(btnConsultarHistorialPieza);
         panel.add(btnVerHistorialArtistas);
-        panel.add(btnConsultarClientes); //
-        panel.add(btnConsultarHistorialCliente); //
+        panel.add(btnConsultarClientes);
+        panel.add(btnConsultarHistorialCliente);
         panel.add(btnSalir);
+        panel.add(btnVisualizarVentas);
 
         add(panel);
+    }
+
+    private void visualizarVentas() throws Exception {
+        Map<String, Integer> ventasPorDia = new HashMap<>();
+
+        for (Factura factura : galeria.getHistorialDeCompras().values()) {
+            String fecha = factura.getFecha();
+            ventasPorDia.put(fecha, ventasPorDia.getOrDefault(fecha, 0) + 1);
+        }
+
+        JFrame frame = new JFrame("Visualización de Ventas");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setSize(850, 300);
+        frame.add(new VentasHeatmapPanel(galeria));
+        frame.pack();
+        frame.setVisible(true);
     }
 
     private void agregarPieza() {

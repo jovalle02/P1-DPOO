@@ -337,6 +337,19 @@ public class Galeria {
 		return artistas.keySet();
 	}
 	
+	public Map<String, Integer> getVentasPorDia() {
+        Map<String, Integer> ventasPorDia = new HashMap<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        for (Factura factura : historialDeCompras.values()) {
+            String fecha = factura.getFecha();
+            ventasPorDia.put(fecha, ventasPorDia.getOrDefault(fecha, 0) + 1);
+        }
+
+        return ventasPorDia;
+    }
+
+	
 	/*
 	 * Se usa cuando se añade una pieza. Primero busca un artista y lo devuelve en caso de encontrarlo.
 	 * De lo contrario, crea un nuevo artista.

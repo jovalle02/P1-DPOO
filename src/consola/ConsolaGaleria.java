@@ -52,37 +52,7 @@ public class ConsolaGaleria extends ConsolaBasica {
         } else {
         	ConsolaAuth auth = new ConsolaAuth();
         	
-        	VentanaAuth ventAuth = new VentanaAuth();
 
-            ventAuth.addWindowListener(new java.awt.event.WindowAdapter() {
-
-                @Override
-
-                public void windowClosed(java.awt.event.WindowEvent windowEvent) {
-
-                    UsuariosJson user = UsuariosJson.getInstance();
-
-                    usuario = user.getUsuario();
-
-                    setAutenticado(true);
-
-                    try {
-
-						correrAplicacion();
-
-					} catch (Exception e) {
-
-						// TODO Auto-generated catch block
-
-						e.printStackTrace();
-
-					}
-
-                }
-
-            });
-
-            ventAuth.setVisible(true);
         	
         	
         	usuario = auth.iniciar();
