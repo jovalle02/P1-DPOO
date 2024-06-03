@@ -11,11 +11,11 @@ import usuarios.Usuario;
 
 public class VentanaAuth extends JFrame{
 	
-	private static final String USERS_FILE = "datos/usuarios.json";
-    private boolean autenticado = false;
-    private Usuario usuario;
     private CardLayout cardLayout;
     private JPanel mainPanel;
+    private JPanel menu;
+    private JPanel login;
+    private JPanel create;
 	
 	public VentanaAuth() {
 		setTitle("Autentificación");
@@ -25,11 +25,11 @@ public class VentanaAuth extends JFrame{
         cardLayout  = new CardLayout();
         mainPanel = new JPanel(cardLayout);
         
-        JPanel menu = new OpcionesPanel(e -> cardLayout.show(mainPanel, "LoginPanel"), e -> cardLayout.show(mainPanel, "CreatePanel"));
+        menu = new OpcionesPanel(e -> cardLayout.show(mainPanel, "LoginPanel"), e -> cardLayout.show(mainPanel, "CreatePanel"));
         
-        JPanel login = new LoginPanel(e -> cardLayout.show(mainPanel, "OpcionesPanel"));
+        login = new LoginPanel(e -> cardLayout.show(mainPanel, "OpcionesPanel"));
         
-        JPanel create = new CreatePanel(e -> cardLayout.show(mainPanel, "OpcionesPanel"));
+        create = new CreatePanel(e -> cardLayout.show(mainPanel, "OpcionesPanel"));
         
         mainPanel.add(menu, "OpcionesPanel");
         mainPanel.add(login, "LoginPanel");
