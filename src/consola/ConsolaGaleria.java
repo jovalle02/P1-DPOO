@@ -50,17 +50,24 @@ public class ConsolaGaleria extends ConsolaBasica {
 			}
 
         } else {
-        	ConsolaAuth auth = new ConsolaAuth();
-        	
 
-        	
-        	
-        	usuario = auth.iniciar();
-			setAutenticado(true);
-			correrAplicacion();
-        }
-
-
+   		 VentanaAuth ventAuth = new VentanaAuth();
+         ventAuth.addWindowListener(new java.awt.event.WindowAdapter() {
+         @Override
+         public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+        	 UsuariosJson user = UsuariosJson.getInstance();
+             usuario = user.getUsuario();
+             setAutenticado(true);
+             try {
+				correrAplicacion();
+			} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+					}
+            	}
+            });
+            ventAuth.setVisible(true);
+       }
 	}
 	
 	private void menuAdministrador() throws Exception {
@@ -139,48 +146,6 @@ public class ConsolaGaleria extends ConsolaBasica {
                 }
             }
         });
-		
-		int opcion = mostrarMenu("Galeria y Casa de Subastas (EMPLEADO)", new String[]{"Consultar Pieza", "Realizar Oferta de Compra", "Consultar Historial de Compras","Subastas" , "Consultar historial de una pieza",  "Ver Historial Artistas", "Salir"});
-
-		switch (opcion) {
-			case 1:
-				System.out.println("Consultar Pieza");
-				menuEmpleado();
-				break;
-			case 2:
-				System.out.println("Realizar Oferta de Compra");
-				menuEmpleado();
-				break;
-			case 3:
-				System.out.println("Consultar Historial de Compras");
-				menuEmpleado();
-				break;
-			case 4:
-				System.out.println("Subastas");
-				menuSubastasEmpleado();
-			case 5:
-				System.out.println("Consultar historial de una pieza");
-				String nombrePieza = pedirCadenaAlUsuario("Ingrese el nombre de la pieza que desea consultar");
-				Factura historiaPieza = galeria.getCurrentOwner(nombrePieza);
-				this.imprimirDetallesPieza(historiaPieza.getIdPieza());
-				System.out.println("Dueño actual de la pieza: " + historiaPieza.getComprador().getNombre() + " " + historiaPieza.getComprador().getApellido());
-				System.out.println("Vendida por un valor de: " + historiaPieza.getValor());
-				break;
-			case 6:
-				System.out.println("Ver Historial Artistas");
-				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
-				galeria.historiaArtista(nombreArtista);
-				menuEmpleado();
-				break;
-			case 7:
-				System.out.println("Gracias por usar la Galería y Casa de Subastas");
-				autenticado = false;
-				galeria.salvarGaleria();
-				correrAplicacion();
-				break;
-			default:
-				System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-		}
 	}
 
 	public static void main(String[] args) throws Exception {
@@ -212,70 +177,6 @@ public class ConsolaGaleria extends ConsolaBasica {
                 }
             }
         });
-		
-		int opcion = mostrarMenu("Galeria y Casa de Subastas", new String[]{"Comprar una Pieza", "Realizar Oferta de Compra", "Consultar el Inventario de la galería.","Subastas" ,"Ver Historial Artistas", "Consultar historial de una pieza", "Salir"});
-
-		switch (opcion) {
-			case 1:
-				System.out.println("Comprar una Pieza");
-				galeria.consultarInventarioParaCompra();
-				System.out.println("Recuerde, en esta lista solo aparecen aquellas piezas cuyo valor es fijo.");
-				System.out.println("Si no encuentra la pieza deseada deberá esperar o consultar para abrir una subasta.");
-				String nombrePieza = pedirCadenaAlUsuario("Digite el nombre de la pieza en la cual esta interesado:");
-				Pieza pieza = imprimirDetallesPieza(nombrePieza);
-				boolean ofertar = pedirConfirmacionAlUsuario("¿Desea comprar esta pieza?");
-				
-				if (ofertar) {
-					if (usuario instanceof UsuarioComun) {
-						UsuarioComun u = (UsuarioComun) usuario;
-						if (u.getTopeDeCompra() >= pieza.getValor()) {
-							System.out.println("Usted cumple con el monto minimo necesario para comprar la pieza.");
-							System.out.println("Por favor espere mientras un administrador confirma la compra, por ahora la pieza se encuentra bloqueada.");
-							galeria.realizarCompra(u, pieza);
-						} else {
-							System.out.println("Usted no cumple con el monto minimo necesario para comprar la pieza.");
-							System.out.println("Por favor consulte con un administrador para aumentar su tope maximo.");
-						}
-					}
-				}
-				menuUsuario();
-				break;
-			case 2:
-				System.out.println("Realizar Oferta de Compra");
-				menuUsuario();
-				break;
-			case 3:
-				System.out.println("Consultar Historial de Compras");
-				menuUsuario();
-				break;
-			case 4:
-				System.out.println("Subastas");
-				menuSubastasUsuario();
-				break;
-			case 5:
-				System.out.println("Ver Historial Artistas");
-				String nombreArtista = pedirCadenaAlUsuario("Ingrese el nombre del artista que quiere consultar: ");
-				galeria.historiaArtista(nombreArtista);
-				menuUsuario();
-				break;
-			case 6:
-				System.out.println("Consultar historial de una pieza");
-				String nombrePiezaConsultar = pedirCadenaAlUsuario("Ingrese el nombre de la pieza que desea consultar");
-				Factura historiaPieza = galeria.getCurrentOwner(nombrePiezaConsultar);
-				this.imprimirDetallesPieza(historiaPieza.getIdPieza());
-				System.out.println("Dueño actual de la pieza: " + historiaPieza.getComprador().getNombre() + " " + historiaPieza.getComprador().getApellido());
-				System.out.println("Vendida por un valor de: " + historiaPieza.getValor());
-				break;
-			case 7:
-				System.out.println("Gracias por usar la Galería y Casa de Subastas");
-				autenticado = false;
-				galeria.salvarGaleria();
-				correrAplicacion();
-				break;
-			default:
-				System.out.println("Opción inválida. Por favor, seleccione una opción válida.");
-		}
-
 	}
 	
 	private void menuSubastasEmpleado() throws Exception {

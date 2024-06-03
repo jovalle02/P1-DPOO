@@ -84,13 +84,6 @@ public class CreatePanel extends JPanel{
 
         gbc.gridx = 0;
         gbc.gridy = 5;
-        formPanel.add(maxPurchaseLabel, gbc);
-
-        gbc.gridx = 1;
-        formPanel.add(maxPurchaseField, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 6;
         formPanel.add(birthDateLabel, gbc);
 
         gbc.gridx = 1;
@@ -117,10 +110,10 @@ public class CreatePanel extends JPanel{
         String firstName = firstNameField.getText();
         String lastName = lastNameField.getText();
         String email = emailField.getText();
-        double maxPurchase = Double.parseDouble(maxPurchaseField.getText());
+        Double topeDeCompra = 2000000.0;
         String birthDate = birthDateField.getText();
         UsuariosJson user = UsuariosJson.getInstance();
-        boolean result = user.create(username, password, firstName, lastName, email, null, birthDate);
+        boolean result = user.create(username, password, firstName, lastName, email, topeDeCompra  , birthDate);
         if (result) {
             JOptionPane.showMessageDialog(this, "Usuario creado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             backListener.actionPerformed(null); // Simular clic en el botón "Volver"

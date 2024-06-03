@@ -1,3 +1,15 @@
+/auth/
+/bin/
 /consola/
+/exceptions/
 /interfaz/
 /logica/
+/pasarela_pagos/
+/persistencia/
+/persistenciaTest/
+/piezas/
+/usuarios/
+/InventarioTest.class
+/SubastaTest.class
+/VentasTest.class
+/adminVerHistorialTest.class

@@ -12,6 +12,19 @@
     "email": "ja@ovalle.com",
     "rol": "COMUN"
   },
+  "juanmi": {
+    "verificado": false,
+    "password": "password",
+    "apellido": "delgado",
+    "historial": [],
+    "id": "591881b2-9b98-4b6d-b275-af82051a097b",
+    "login": "juanmi",
+    "topeDeCompra": 2000000,
+    "nombre": "juan",
+    "piezas_actuales": [],
+    "email": "ju@a.com",
+    "rol": "COMUN"
+  },
   "empleado": {
     "password": "empleado",
     "apellido": "Trabajoso",

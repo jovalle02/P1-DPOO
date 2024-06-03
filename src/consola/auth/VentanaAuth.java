@@ -1,6 +1,8 @@
 package consola.auth;
 
 import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -35,6 +37,10 @@ public class VentanaAuth extends JFrame{
 
         add(mainPanel);
         cardLayout.show(mainPanel, "OpcionesPanel");
+        
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(screenSize.width / 2 - getWidth() / 2, screenSize.height / 2 - getHeight() / 2);
+        
         setVisible(true);
         
 	}
